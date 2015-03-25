@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">sensorShip</string>
 
-    <string name="hello_world">Hello world (Simon says)</string>
+    <string name="hello_world">Hello world (Simon says2)</string>
     <string name="action_settings">Settings</string>
 </resources>
