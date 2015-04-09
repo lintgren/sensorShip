@@ -1,24 +1,24 @@
 package se.sensorship;
 
 import android.app.Activity;
+import android.location.Location;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-
-import android.location.Location;
-import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -165,10 +165,15 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(path[0], 13));
         PolylineOptions polylineOptions = new PolylineOptions().geodesic(true);
-        for (LatLng location : path){
+        for (LatLng location : path) {
             polylineOptions.add(location);
         }
         mMap.addPolyline(polylineOptions);
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(turnPoints[0]);
+        mMap.addMarker(markerOptions);
+        markerOptions.position(turnPoints[1]);
+        mMap.addMarker(markerOptions);
 
     }
 
@@ -188,11 +193,11 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
     @Override
     public void onConnected(Bundle hint) {
         lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        if (lastLocation != null){
+        if (lastLocation != null) {
             tvLongitude.setText(String.valueOf(lastLocation.getLongitude()));
             tvLatitude.setText(String.valueOf(lastLocation.getLatitude()));
         }
-        if (updateLocation){
+        if (updateLocation) {
             startLocationUpdates();
         }
     }
@@ -234,7 +239,7 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
     @Override
     protected void onResume() {
         super.onResume();
-        if (googleApiClient.isConnected() && !updateLocation){
+        if (googleApiClient.isConnected() && !updateLocation) {
             startLocationUpdates();
         }
     }
