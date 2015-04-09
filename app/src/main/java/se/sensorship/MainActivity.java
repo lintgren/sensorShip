@@ -3,7 +3,6 @@ package se.sensorship;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,6 +47,11 @@ public class MainActivity extends Activity {
 
     public void startLocation(View v){
         Intent intent = new Intent(this, LocationActivity.class);
+        startActivity(intent);
+    }
+
+    public void startMain(View v) {
+        Intent intent = new Intent(this, MainActivityFuture.class);
         startActivity(intent);
     }
 }

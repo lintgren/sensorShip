@@ -7,4 +7,13 @@
     <string name="title_activity_location_activity">LocationActivity</string>
     <string name="right">Right</string>
     <string name="left">Left</string>
+    <string name="title_activity_main_activity_future">MainActivityFuture</string>
+    <string name="distance_button">Distance</string>
+    <string name="duration_button">Duration</string>
+    <string name="kilometers">Km</string>
+    <string name="duration">Duration</string>
+    <string name="minutes">Minutes</string>
+    <string name="hours">Hours</string>
+
+
 </resources>
