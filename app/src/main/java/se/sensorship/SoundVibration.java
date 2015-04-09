@@ -16,7 +16,7 @@ import java.util.Locale;
 
 public class SoundVibration extends Activity {
 
-    private Boolean loadedTts;
+    private boolean loadedTts;
     private TextToSpeech tts;
     private Vibrator vibrator;
 
