@@ -1,11 +1,12 @@
 package se.sensorship;
 
+
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,8 +14,7 @@ import android.view.View;
 
 import java.util.Locale;
 
-
-public class SoundVibration extends ActionBarActivity {
+public class SoundVibration extends Activity {
 
     private Boolean loadedTts;
     private TextToSpeech tts;
@@ -28,7 +28,6 @@ public class SoundVibration extends ActionBarActivity {
 
         setupTTS();
         setupVibrator();
-
 
     }
 
