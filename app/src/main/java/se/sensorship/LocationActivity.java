@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import android.location.Location;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -25,14 +26,12 @@ import java.util.Date;
 
 public class LocationActivity extends Activity implements ConnectionCallbacks,
         OnConnectionFailedListener, LocationListener, OnMapReadyCallback {
-    Location lastLocation,deltaLocation;
+    Location deltaLocation,lastLocation;
     GoogleApiClient googleApiClient;
     TextView tvLongitude, tvLatitude;
     boolean updateLocation = true;
     LocationRequest locationRequest;
     Date lastUpdate;
-    long deltaTime;
-
     private GoogleMap mMap;
 
     private LatLng[] rutt2 = {new LatLng(55.7135923,13.2111561), new LatLng(55.7153994,13.2122505), new LatLng(55.7155081, 13.2143104), new LatLng(55.7130785,13.214052900000002), new LatLng(55.7128791,13.2130229),new LatLng(55.7135923,13.2111561)};
@@ -106,19 +105,8 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
 
     @Override
     public void onLocationChanged(Location location) {
-        Location newLocation = location;
-        if(lastLocation!=null){
-            deltaLocation.setLongitude(newLocation.getLongitude()-lastLocation.getLongitude());
-            deltaLocation.setLatitude(newLocation.getLatitude()-lastLocation.getLatitude());
-        }
-        lastLocation = newLocation;
-
-        Date newUpdate = new Date();
-
-        if(lastUpdate!=null)
-            deltaTime = newUpdate.getTime() - lastUpdate.getTime();
-        lastUpdate = newUpdate;
-
+        lastLocation = location;
+        lastUpdate = new Date();
         updateUI();
 
     }
