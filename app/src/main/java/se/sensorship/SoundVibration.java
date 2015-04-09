@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Locale;
 
 public class SoundVibration extends Activity {
@@ -67,7 +69,7 @@ public class SoundVibration extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings){
             return true;
         }
 
@@ -76,12 +78,12 @@ public class SoundVibration extends Activity {
 
 
     private void speak(String text) {
-        if (!loadedTts) {
+        if (!loadedTts){
             return;
         }
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP){
             tts.speak(text, TextToSpeech.QUEUE_ADD, null, null);
-        } else {
+        }else{
             //noinspection deprecation
             tts.speak(text, TextToSpeech.QUEUE_ADD, null);
         }
@@ -90,10 +92,10 @@ public class SoundVibration extends Activity {
 
     private void vibrate(int numberOfVibrations) {
         long[] pattern = new long[numberOfVibrations * 2];
-        for (int i = 0; i < pattern.length; i++) {
-            if (i % 2 == 0) { // vibration
+        for (int i = 0; i < pattern.length; i++){
+            if (i % 2 == 0){ // vibration
                 pattern[i] = 150;
-            } else {
+            }else{
                 pattern[i] = 300;
             }
 
@@ -102,7 +104,7 @@ public class SoundVibration extends Activity {
     }
 
     private void setupTTS() {
-        if (tts != null) {
+        if (tts != null){
             Log.d("tts not null", "tts not null");
             return;
         }
@@ -110,10 +112,10 @@ public class SoundVibration extends Activity {
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS) {
+                if (status == TextToSpeech.SUCCESS){
                     loadedTts = true;
                     tts.setLanguage(Locale.CANADA);
-                } else {
+                }else{
                     loadedTts = false;
                 }
             }
@@ -126,7 +128,7 @@ public class SoundVibration extends Activity {
     }
 
     private void closeTTS() {
-        if (tts != null) {
+        if (tts != null){
             tts.stop();
             tts.shutdown();
         }

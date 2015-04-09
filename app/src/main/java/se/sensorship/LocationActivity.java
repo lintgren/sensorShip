@@ -1,33 +1,40 @@
 package se.sensorship;
 
 import android.app.Activity;
-import android.location.Location;
 import android.os.Bundle;
-import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import android.location.Location;
+import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.util.Date;
 
-public class LocationActivity extends Activity implements ConnectionCallbacks, OnConnectionFailedListener, LocationListener, OnMapReadyCallback {
+public class LocationActivity extends Activity implements ConnectionCallbacks,
+        OnConnectionFailedListener, LocationListener, OnMapReadyCallback {
     Location lastLocation;
     GoogleApiClient googleApiClient;
     TextView tvLongitude, tvLatitude;
     boolean updateLocation = true;
     LocationRequest locationRequest;
     String lastUpdate;
+
+    private GoogleMap mMap;
+
+    private LatLng[] rutt2 = {new LatLng(55.7135923,13.2111561), new LatLng(55.7153994,13.2122505), new LatLng(55.7155081, 13.2143104), new LatLng(55.7130785,13.214052900000002), new LatLng(55.7128791,13.2130229),new LatLng(55.7135923,13.2111561)};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,29 +46,30 @@ public class LocationActivity extends Activity implements ConnectionCallbacks, O
         tvLatitude = (TextView) findViewById(R.id.tvLatitude);
         createLocationRequest();
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
-        LatLng sydney = new LatLng(-33.867, 151.206);
-
+        mMap = map;
         map.setMyLocationEnabled(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
 
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(rutt2[0], 13));
+        PolylineOptions polylineOptions = new PolylineOptions().geodesic(true);
+        for(LatLng location : rutt2){
+            polylineOptions.add(location);
+        }
+        mMap.addPolyline(polylineOptions);
     }
 
 
-    protected synchronized void buildGoogleApiClient(){
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
+    protected synchronized void buildGoogleApiClient() {
+        googleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
     }
-    protected void createLocationRequest(){
+
+    protected void createLocationRequest() {
         locationRequest = new LocationRequest();
         locationRequest.setInterval(10000);
         locationRequest.setFastestInterval(5000);
@@ -71,16 +79,18 @@ public class LocationActivity extends Activity implements ConnectionCallbacks, O
     @Override
     public void onConnected(Bundle hint) {
         lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        if(lastLocation != null){
+        if (lastLocation != null){
             tvLongitude.setText(String.valueOf(lastLocation.getLongitude()));
             tvLatitude.setText(String.valueOf(lastLocation.getLatitude()));
         }
-        if(updateLocation){
+        if (updateLocation){
             startLocationUpdates();
         }
     }
-    protected void startLocationUpdates(){
-        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,locationRequest, this);
+
+    protected void startLocationUpdates() {
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,
+                locationRequest, this);
     }
 
     @Override
@@ -95,7 +105,7 @@ public class LocationActivity extends Activity implements ConnectionCallbacks, O
 
     @Override
     public void onLocationChanged(Location location) {
-        lastLocation =location;
+        lastLocation = location;
         lastUpdate = DateFormat.getTimeInstance().format(new Date());
         updateUI();
 
@@ -105,8 +115,9 @@ public class LocationActivity extends Activity implements ConnectionCallbacks, O
         tvLatitude.setText(String.valueOf(lastLocation.getLatitude()));
         tvLongitude.setText(String.valueOf(lastLocation.getLongitude()));
     }
+
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
         stopLocationUpdate();
     }
@@ -114,7 +125,7 @@ public class LocationActivity extends Activity implements ConnectionCallbacks, O
     @Override
     protected void onResume() {
         super.onResume();
-        if(googleApiClient.isConnected() && !updateLocation) {
+        if (googleApiClient.isConnected() && !updateLocation){
             startLocationUpdates();
         }
     }
