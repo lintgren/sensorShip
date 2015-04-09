@@ -1,8 +1,8 @@
 package se.sensorship;
 
-import android.media.AudioManager;
-import android.media.SoundPool;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -15,24 +15,19 @@ import java.util.Locale;
 
 public class SoundVibration extends ActionBarActivity {
 
-    private SoundPool soundPool;
-    private Boolean loaded;
+    private Boolean loadedTts;
     private TextToSpeech tts;
+    private Vibrator vibrator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sound_vibration);
 
+        setupTTS();
+        setupVibrator();
 
-        soundPool = new SoundPool(14, AudioManager.STREAM_MUSIC, 0);
-        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-            @Override
-            public void onLoadComplete(SoundPool soundPool, int sampleId,
-                                       int status) {
-                loaded = true;
-            }
-        });
+
     }
 
 
@@ -45,10 +40,15 @@ public class SoundVibration extends ActionBarActivity {
 
     public void rightButton(View v) {
         Log.d("Sound", "rightClick!");
+        speak("Right");
+        vibrate(1);
+
     }
 
     public void leftButton(View v) {
         Log.d("Sound", "leftClick!");
+        speak("Left");
+        vibrate(2);
     }
 
     @Override
@@ -66,21 +66,42 @@ public class SoundVibration extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /*
-    private void playSound(int sound) {
-        if (loaded) {
-            AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-            float actualVolume = (float) audioManager
-                    .getStreamVolume(AudioManager.STREAM_MUSIC);
-            float maxVolume = (float) audioManager
-                    .getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-            float volume = actualVolume / maxVolume;
-            soundPool.play(sound, volume, volume, 1, 0, 1f);
+    private void speak(String text) {
+        if (!loadedTts) {
+            return;
         }
-    }*/
+        tts.speak(text, TextToSpeech.QUEUE_ADD, null, null);
+
+    }
+
+    private void vibrate(int numberOfVibrations) {
+        long[] pattern = new long[numberOfVibrations * 2];
+        for (int i = 0; i < pattern.length; i++) {
+            if (i % 2 == 0) { // vibration
+                pattern[i] = 150;
+            } else {
+                pattern[i] = 300;
+            }
+
+        }
+        vibrator.vibrate(pattern, -1);
+    }
 
     private void setupTTS() {
-        tts = new TextToSpeech(this, this);
-        tts.setLanguage(Locale.US);
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    loadedTts = true;
+                } else {
+                    loadedTts = false;
+                }
+            }
+        });
+        tts.setLanguage(Locale.UK);
+    }
+
+    private void setupVibrator() {
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
     }
 }
