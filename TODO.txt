@@ -1,0 +1,9 @@
+# Förenkla sökningen av path för att förenkla beräkningarna och endast kontrollera de punkter som är närmast användaren för tillfället, antingen via vektoranalys, hashMap (med egen implementerad hashcode) eller matematisk statistik (avvikelse från path)
+Dela upp path-arrayen till flera olika listor där varje lista innehåller de punkter som gäller mellan de olika turnPoints-punkterna (de kan i sin tur delas upp i hashmaps)
+
+# Göra om LocationActivity till en service så att den kan rulla i bakgrunden
+
+# Motivationskartan ska finnas i GUI (fake) tills tid finns för att göra något på riktigt :) 
+
+# Slumpa väg från något schysst API
+
