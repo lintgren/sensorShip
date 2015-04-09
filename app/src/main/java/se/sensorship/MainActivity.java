@@ -44,4 +44,9 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, SoundVibration.class);
         startActivity(intent);
     }
+
+    public void startLocation(View v){
+        Intent intent = new Intent(this, LocationActivity.class);
+        startActivity(intent);
+    }
 }

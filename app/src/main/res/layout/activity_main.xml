@@ -18,5 +18,10 @@
         android:layout_height="wrap_content"
         android:onClick="startSoundVibration"
         android:text="Start SoundVibration" />
+    <Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:onClick="startLocation"
+    android:text="Start Party Location" />
 
 </RelativeLayout>
