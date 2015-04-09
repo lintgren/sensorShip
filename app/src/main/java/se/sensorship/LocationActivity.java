@@ -6,15 +6,22 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationListener;
 import android.location.Location;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.util.Date;
 
-public class LocationActivity extends Activity implements ConnectionCallbacks, OnConnectionFailedListener {
+public class LocationActivity extends Activity implements ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
     Location lastLocation;
     GoogleApiClient googleApiClient;
     TextView tvLongitude, tvLatitude;
+    boolean updateLocation = true;
+    LocationRequest locationRequest;
+    String lastUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +31,7 @@ public class LocationActivity extends Activity implements ConnectionCallbacks, O
         googleApiClient.connect();
         tvLongitude = (TextView) findViewById(R.id.tvLongitude);
         tvLatitude = (TextView) findViewById(R.id.tvLatitude);
+        createLocationRequest();
     }
 
     protected synchronized void buildGoogleApiClient(){
@@ -33,6 +41,12 @@ public class LocationActivity extends Activity implements ConnectionCallbacks, O
                 .addApi(LocationServices.API)
                 .build();
     }
+    protected void createLocationRequest(){
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
 
     @Override
     public void onConnected(Bundle hint) {
@@ -41,6 +55,12 @@ public class LocationActivity extends Activity implements ConnectionCallbacks, O
             tvLongitude.setText(String.valueOf(lastLocation.getLongitude()));
             tvLatitude.setText(String.valueOf(lastLocation.getLatitude()));
         }
+        if(updateLocation){
+            startLocationUpdates();
+        }
+    }
+    protected void startLocationUpdates(){
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,locationRequest, this);
     }
 
     @Override
@@ -52,4 +72,27 @@ public class LocationActivity extends Activity implements ConnectionCallbacks, O
     public void onConnectionFailed(ConnectionResult connectionResult) {
         System.out.println(connectionResult);
     }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        lastLocation =location;
+        lastUpdate = DateFormat.getTimeInstance().format(new Date());
+        updateUI();
+
+    }
+
+    private void updateUI() {
+        tvLatitude.setText(String.valueOf(lastLocation.getLatitude()));
+        tvLongitude.setText(String.valueOf(lastLocation.getLongitude()));
+    }
+    @Override
+    protected void onPause(){
+        super.onPause();
+        stopLocationUpdate();
+    }
+
+    private void stopLocationUpdate() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+    }
+
 }
