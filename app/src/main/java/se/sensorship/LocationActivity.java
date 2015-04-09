@@ -91,7 +91,16 @@ public class LocationActivity extends Activity implements ConnectionCallbacks, O
         stopLocationUpdate();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(googleApiClient.isConnected() && !updateLocation) {
+            startLocationUpdates();
+        }
+    }
+
     private void stopLocationUpdate() {
+        updateLocation = false;
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
     }
 
