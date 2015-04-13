@@ -83,8 +83,6 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG,"updateUI: " + location.toString());
         route.isOnTrack(location);
-
     }
 }

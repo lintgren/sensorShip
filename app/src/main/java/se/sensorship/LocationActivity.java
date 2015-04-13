@@ -17,6 +17,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.Date;
@@ -29,7 +30,7 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
     boolean updateLocation = true;
     LocationRequest locationRequest;
     Date lastUpdate;
-    private GoogleMap mMap;
+    public static GoogleMap mMap;
     private LatLng[] turnPoints = {new LatLng(55.703503700000006, 13.2191062), new LatLng(55.7090651,
             13.2399845)};
     private LatLng[] path = {new LatLng(55.705788, 13.211124), new LatLng(55.705788, 13.211124),
@@ -165,6 +166,13 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
             polylineOptions.add(location);
         }
         mMap.addPolyline(polylineOptions);
+        for(LatLng location : Route.getLocationOnTurns()) {
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(location);
+            if(LocationActivity.mMap != null)
+                LocationActivity.mMap.addMarker(markerOptions);
+        }
+
     }
 
 

@@ -4,6 +4,10 @@ import android.location.Location;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Andy on 15-04-09.
@@ -11,22 +15,43 @@ import com.google.android.gms.maps.model.LatLng;
  * Framtiden slumpa nya routes och så.
  */
 public class Route {
+    static List<LatLng> pointsToTurn = new ArrayList<LatLng>();
     private final String TAG = "Route";
-
+    Polyline pathDirectionLine;
     private LatLng[] turns, path;
 
     public Route(LatLng[] turns, LatLng[] path) {
+        this.turns = turns;
+        this.path = path;
 
-        /**
-         * Skapa ny random route efter där man är och hur långt man ska springa.
-         */
+        List<Integer> turnDirectionOnPathIndex = new ArrayList<>();
+        int closestPointOnPathIndex = 0;
+        for (int turnIndex = 0; turnIndex < turns.length; turnIndex++) {
+            float closestPointOnPathToTurnDistance = Float.MAX_VALUE;
+
+            for (int pathIndex = closestPointOnPathIndex; pathIndex < path.length; pathIndex++) {
+                if (closestPointOnPathToTurnDistance != Float.MAX_VALUE && closestPointOnPathIndex + 10 < pathIndex) {
+                    break;
+                }
+                Location pathPoint = convertLatLngToLocation(path[pathIndex]);
+                Location turnPoint = convertLatLngToLocation(turns[turnIndex]);
+                float distance = pathPoint.distanceTo(turnPoint);
+                if (distance <= closestPointOnPathToTurnDistance) {
+                    closestPointOnPathToTurnDistance = distance;
+                    closestPointOnPathIndex = pathIndex;
+                }
+            }
+            turnDirectionOnPathIndex.add(closestPointOnPathIndex);
+            pointsToTurn.add(path[closestPointOnPathIndex]);
+
+        }
+        Log.d(TAG, "point to turn: " + turnDirectionOnPathIndex.toString());
+
     }
 
     public Route() {
-
-        turns = new LatLng[]{new LatLng(55.703503700000006, 13.2191062), new LatLng(55.7090651,
-                13.2399845)};
-        path = new LatLng[]{new LatLng(55.705788, 13.211124), new LatLng(55.705788, 13.211124),
+        this(new LatLng[]{new LatLng(55.703503700000006, 13.2191062), new LatLng(55.7090651,
+                13.2399845)}, new LatLng[]{new LatLng(55.705788, 13.211124), new LatLng(55.705788, 13.211124),
                 new LatLng(55.705679, 13.211462), new LatLng(55.705466, 13.211608),
                 new LatLng(55.705288, 13.21184), new LatLng(55.705123, 13.211989),
                 new LatLng(55.704991, 13.212413), new LatLng(55.704893, 13.212749),
@@ -132,37 +157,63 @@ public class Route {
                 new LatLng(55.704101, 13.215343), new LatLng(55.70418, 13.215059),
                 new LatLng(55.704248, 13.214775), new LatLng(55.704364, 13.214351),
                 new LatLng(55.704446, 13.214137), new LatLng(55.704446, 13.214137),
-                new LatLng(55.704446, 13.214137)};
+                new LatLng(55.704446, 13.214137)});
+
+    }
+
+    public static List<LatLng> getLocationOnTurns() {
+        return pointsToTurn;
     }
 
     /**
      * retunerar om användaren befinner sig inom PATH ( på rimligt avstånd och i rätt riktning)
      */
     public boolean isOnTrack(Location currentLocation) {
-        //TODO tänk ut en bra algoritm för att veta om telefonen har samma riktning som path:en
         float distanceToTrack = Float.MAX_VALUE;
-        LatLng closestPointOnPath = path[0];
-        for (LatLng point : path){
-            float distance = currentLocation.distanceTo(convertLatLngToLocation(point));
-            if (distance < distanceToTrack){
+        for (int pathIndex = 0; pathIndex < path.length; pathIndex++) {
+            LatLng pointOnPath = path[pathIndex];
+            float distance = currentLocation.distanceTo(convertLatLngToLocation(pointOnPath));
+            if (distance < distanceToTrack) {
                 distanceToTrack = distance;
-                closestPointOnPath = point;
+
             }
         }
-        Log.d(TAG, "Distance: " + distanceToTrack + " Bearing: " + currentLocation.bearingTo
-                (convertLatLngToLocation(closestPointOnPath)));
-        return false;
+        Log.d(TAG, "Distance: " + distanceToTrack);
+        return distanceToTrack < 10 ? true : false;
     }
 
+    /*
+    private void updatePathDirectionLine(int closestPointIndex) {
+
+        if (LocationActivity.mMap == null) {
+            return;
+        }
+        if (pathDirectionLine != null) {
+            pathDirectionLine.remove();
+        }
+        PolylineOptions polylineOptions = new PolylineOptions();
+        polylineOptions.color(Color.YELLOW);
+        if (closestPointIndex > 0 && closestPointIndex < path.length - 1) {
+            polylineOptions.add(path[closestPointIndex - 1]);
+            polylineOptions.add(path[closestPointIndex + 1]);
+        }
+        pathDirectionLine = LocationActivity.mMap.addPolyline(polylineOptions);
+    }
+    */
+
     public double distanceToNextDirectionPoint(Location currentLocation) {
-        /**
-         * metod som returnar olika ints, om man är rätt/ om man ska svänga?
-         */
+
 
         return 0;
     }
 
-    public int directionToNextDirectionPoint() {
+
+    /**
+     * metod som returnar olika ints, om man är rätt/ om man ska svänga?
+     * <p/>
+     * Servicen kanske ska få en notifiering när denna behöver anropas? isOnTrack kan hålla reda på om förra punkten är passerad eller ej
+     */
+    public int directionOnNextDirectionPoint() {
         return 0;
     }
 
