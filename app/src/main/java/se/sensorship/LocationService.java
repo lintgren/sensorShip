@@ -4,27 +4,27 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.Date;
 
 public class LocationService extends Service implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     public static final int NOTIFICATION_ID = 1;
 
-
     private final String TAG = "LocationService";
     private GoogleApiClient googleApiClient;
-
-    private LocationInteractions locationInteractions;
+    private Route route;
 
     public LocationService() {
     }
@@ -37,6 +37,9 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand");
+
+        route = new Route();
+
         googleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
         googleApiClient.connect();
@@ -54,18 +57,18 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, locationInteractions);
+        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient,
+                this);
         super.onDestroy();
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        locationInteractions = new LocationInteractions(googleApiClient);
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setInterval(1000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,
-                locationRequest,  locationInteractions);
+                locationRequest, this);
     }
 
     @Override
@@ -78,4 +81,10 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d(TAG,"updateUI: " + location.toString());
+        route.isOnTrack(location);
+
+    }
 }
