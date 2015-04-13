@@ -1,6 +1,8 @@
 package se.sensorship;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,6 +11,10 @@ import android.view.View;
 
 
 public class MainActivity extends Activity {
+
+    //TODO remove this before release
+    static Intent locationServiceIntent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,5 +59,17 @@ public class MainActivity extends Activity {
     public void startMain(View v) {
         Intent intent = new Intent(this, MainActivityFuture.class);
         startActivity(intent);
+    }
+
+    public void startLocationService(View view){
+        locationServiceIntent = new Intent(this, LocationService.class);
+        startService(locationServiceIntent);
+    }
+
+    public void stopLocatinService(View v){
+        if(locationServiceIntent == null){
+            return;
+        }
+        stopService(locationServiceIntent);
     }
 }

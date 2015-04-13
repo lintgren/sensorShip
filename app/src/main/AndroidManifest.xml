@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="se.sensorship">
+    package="se.sensorship" >
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -12,10 +12,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,10 +24,10 @@
         </activity>
         <activity
             android:name=".SoundVibration"
-            android:label="@string/title_activity_sound_vibration"></activity>
+            android:label="@string/title_activity_sound_vibration" />
         <activity
             android:name=".LocationActivity"
-            android:label="@string/title_activity_location_activity"></activity>
+            android:label="@string/title_activity_location_activity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -35,7 +35,13 @@
 
         <activity
             android:name=".MainActivityFuture"
-            android:label="@string/title_activity_main_activity_future"></activity>
+            android:label="@string/title_activity_main_activity_future" />
+
+        <service
+            android:name=".LocationService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>
