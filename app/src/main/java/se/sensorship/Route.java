@@ -170,16 +170,23 @@ public class Route {
      */
     public boolean isOnTrack(Location currentLocation) {
         float distanceToTrack = Float.MAX_VALUE;
+        int closestPointIndex = 0;
+        Log.d(TAG,"My Bearing" + currentLocation.getBearing());
         for (int pathIndex = 0; pathIndex < path.length; pathIndex++) {
             LatLng pointOnPath = path[pathIndex];
             float distance = currentLocation.distanceTo(convertLatLngToLocation(pointOnPath));
             if (distance < distanceToTrack) {
                 distanceToTrack = distance;
+                closestPointIndex = pathIndex;
 
             }
         }
+
+        float pathBearing = (convertLatLngToLocation(path[closestPointIndex]).bearingTo(convertLatLngToLocation(path[closestPointIndex+1]))+360)%360;
+        if(closestPointIndex < path.length -1)
+        Log.d(TAG,"Track Bearing" + pathBearing);
         Log.d(TAG, "Distance: " + distanceToTrack);
-        return distanceToTrack < 10 ? true : false;
+        return distanceToTrack < 10 || Math.abs(currentLocation.getBearing() - pathBearing) < 90;
     }
 
     /*

@@ -40,5 +40,11 @@
         android:text="Stop LocationService"
         android:id="@+id/stopLocationServiceButton"
         android:onClick="stopLocatinService"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Fragment"
+        android:id="@+id/startFragment"
+        android:onClick="startFragment"/>
 
 </LinearLayout>

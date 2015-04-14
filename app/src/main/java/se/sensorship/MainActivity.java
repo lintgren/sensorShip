@@ -1,8 +1,6 @@
 package se.sensorship;
 
 import android.app.Activity;
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -71,5 +69,9 @@ public class MainActivity extends Activity {
             return;
         }
         stopService(locationServiceIntent);
+    }
+    public void startFragment(View v){
+        Intent intent = new Intent(this, FragmentHolder.class);
+        startService(intent);
     }
 }
