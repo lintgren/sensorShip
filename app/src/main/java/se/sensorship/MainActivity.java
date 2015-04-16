@@ -49,28 +49,25 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
-    public void startLocation(View v){
+    public void startLocation(View v) {
         Intent intent = new Intent(this, LocationActivity.class);
         startActivity(intent);
     }
 
-    public void startMain(View v) {
-        Intent intent = new Intent(this, MainActivityFuture.class);
-        startActivity(intent);
-    }
 
-    public void startLocationService(View view){
+    public void startLocationService(View view) {
         locationServiceIntent = new Intent(this, LocationService.class);
         startService(locationServiceIntent);
     }
 
-    public void stopLocatinService(View v){
-        if(locationServiceIntent == null){
+    public void stopLocatinService(View v) {
+        if (locationServiceIntent == null) {
             return;
         }
         stopService(locationServiceIntent);
     }
-    public void startFragment(View v){
+
+    public void startFragment(View v) {
         Intent intent = new Intent(this, FragmentHolder.class);
         startActivity(intent);
     }
