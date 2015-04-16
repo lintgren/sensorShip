@@ -52,8 +52,8 @@ public class Route {
     }
 
     public Route() {
-        this(new Direction[]{new Direction(55.703503700000006, 13.2191062,Direction.LEFT), new Direction(55.7090651,
-                13.2399845, Direction.LEFT)}, new LatLng[]{new LatLng(55.705788, 13.211124), new LatLng(55.705788, 13.211124),
+        this(new Direction[]{new Direction(55.703503700000006, 13.2191062, Direction.LEFT), new Direction(55.7090651,
+                13.2399845, Direction.RIGHT), new Direction(55.704446, 13.214137, Direction.GOAL)}, new LatLng[]{new LatLng(55.705788, 13.211124), new LatLng(55.705788, 13.211124),
                 new LatLng(55.705679, 13.211462), new LatLng(55.705466, 13.211608),
                 new LatLng(55.705288, 13.21184), new LatLng(55.705123, 13.211989),
                 new LatLng(55.704991, 13.212413), new LatLng(55.704893, 13.212749),
@@ -173,12 +173,12 @@ public class Route {
     public boolean isOnTrack(Location currentLocation) {
         int closestPointIndex = getClosestPointOnPathIndex(currentLocation);
         float distanceToTrack = currentLocation.distanceTo(convertLatLngToLocation(path[closestPointIndex]));
-        if(closestPointIndex < path.length -1)
-        Log.d(TAG, "Distance: " + distanceToTrack);
+        if (closestPointIndex < path.length - 1)
+            Log.d(TAG, "Distance: " + distanceToTrack);
         return distanceToTrack < 20;
     }
 
-    private int getClosestPointOnPathIndex(Location location){
+    private int getClosestPointOnPathIndex(Location location) {
         int closestPointOnPathIndex = 0;
         float distanceToTrack = Float.MAX_VALUE;
         for (int pathIndex = 0; pathIndex < path.length; pathIndex++) {
@@ -211,18 +211,18 @@ public class Route {
     }
     */
 
-    public double distanceToNextDirectionPoint(Location currentLocation){
-        int directionPointOnPathIndex=0;
+    public double distanceToNextDirectionPoint(Location currentLocation) {
         int currentIndexOnPath = getClosestPointOnPathIndex(currentLocation);
-        for(Integer i : turnDirectionOnPathIndex){
-            if(i>currentIndexOnPath) {
+        int directionPointOnPathIndex = 0;
+        for (Integer i : turnDirectionOnPathIndex) {
+            if (i > currentIndexOnPath) {
                 directionPointOnPathIndex = i;
                 break;
             }
         }
-        float distance=0;
-        for(int i = currentIndexOnPath; i < directionPointOnPathIndex;i++){
-            distance += convertLatLngToLocation(path[i]).distanceTo(convertLatLngToLocation(path[i+1]));
+        float distance = 0;
+        for (int i = currentIndexOnPath; i < directionPointOnPathIndex; i++) {
+            distance += convertLatLngToLocation(path[i]).distanceTo(convertLatLngToLocation(path[i + 1]));
         }
         return distance;
     }
@@ -233,8 +233,23 @@ public class Route {
      * <p/>
      * Servicen kanske ska få en notifiering när denna behöver anropas? isOnTrack kan hålla reda på om förra punkten är passerad eller ej
      */
-    public int directionOnNextDirectionPoint() {
-        return 0;
+    public int directionOnNextDirectionPoint(Location currentLocation) {
+        int currentIndexOnPath = getClosestPointOnPathIndex(currentLocation);
+        int directionPointIndex = 0;
+        for (; directionPointIndex < turnDirectionOnPathIndex.size(); directionPointIndex++) {
+            if (turnDirectionOnPathIndex.get(directionPointIndex) > currentIndexOnPath) {
+                break;
+            }
+        }
+
+        return directions[directionPointIndex].getDirection();
+         /**
+         * path[LÅNG] = [LATLNG1, LATLNG2]
+         * turnDirectionOnPathIndex = [11, 189, LAST]
+         * directions[2] = Direction1, direction2, GOAL;
+         *
+         */
+
     }
 
     private Location convertLatLngToLocation(LatLng source) {

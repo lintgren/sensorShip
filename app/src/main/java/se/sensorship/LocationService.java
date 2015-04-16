@@ -27,6 +27,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private Route route;
 
     private Location prevLocation;
+
     public LocationService() {
     }
 
@@ -84,15 +85,23 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     @Override
     public void onLocationChanged(Location location) {
-        if(prevLocation != null) {
+        if (prevLocation != null) {
             float bearing = prevLocation.bearingTo(location);
             location.setBearing(bearing);
         }
 
-        if(!route.isOnTrack(location)){
-            Log.e(TAG,"NOT ON TRACK!");
+        if (!route.isOnTrack(location)) {
+            Log.e(TAG, "NOT ON TRACK!");
         }
-        Log.d(TAG,"distanceToNextDirection: " + route.distanceToNextDirectionPoint(location));
+        Log.d(TAG, "distanceToNextDirection: " + route.distanceToNextDirectionPoint(location));
         prevLocation = location;
+        int direction = route.directionOnNextDirectionPoint(location);
+        if (direction == Direction.LEFT) {
+            Log.d(TAG, "TURN LEFT!");
+        } else if (direction == Direction.RIGHT) {
+            Log.d(TAG, "TURN RIGHT!");
+        } else if (direction == Direction.GOAL) {
+            Log.d(TAG, "GOAL");
+        }
     }
 }
