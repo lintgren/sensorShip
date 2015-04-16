@@ -3,10 +3,14 @@ package se.sensorship;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Vibrator;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -16,6 +20,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.Date;
+import java.util.Locale;
 
 public class LocationService extends Service implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -25,7 +30,9 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private final String TAG = "LocationService";
     private GoogleApiClient googleApiClient;
     private Route route;
-
+    private boolean loadedTts;
+    private TextToSpeech tts;
+    private Vibrator vibrator;
     private Location prevLocation;
 
     public LocationService() {
@@ -41,6 +48,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         Log.d(TAG, "onStartCommand");
 
         route = new Route();
+        setupTTS();
+        setupVibrator();
 
         googleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
@@ -61,6 +70,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         Log.d(TAG, "onDestroy");
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient,
                 this);
+        closeTTS();
+        Log.d("tts Destroy", "tts Destroy");
         super.onDestroy();
     }
 
@@ -95,13 +106,76 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         }
         Log.d(TAG, "distanceToNextDirection: " + route.distanceToNextDirectionPoint(location));
         prevLocation = location;
+        if(route.distanceToNextDirectionPoint(location)>50){
+            return;
+        }
         int direction = route.directionOnNextDirectionPoint(location);
         if (direction == Direction.LEFT) {
+            speak("Left");
+            vibrate(2);
             Log.d(TAG, "TURN LEFT!");
         } else if (direction == Direction.RIGHT) {
+            speak("Right");
+            vibrate(1);
             Log.d(TAG, "TURN RIGHT!");
         } else if (direction == Direction.GOAL) {
             Log.d(TAG, "GOAL");
+        }
+    }
+    private void speak(String text) {
+        if (!loadedTts){
+            return;
+        }
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP){
+            tts.speak(text, TextToSpeech.QUEUE_ADD, null, null);
+        }else{
+            //noinspection deprecation
+            tts.speak(text, TextToSpeech.QUEUE_ADD, null);
+        }
+
+    }
+
+    private void vibrate(int numberOfVibrations) {
+        long[] pattern = new long[numberOfVibrations * 2];
+        for (int i = 0; i < pattern.length; i++){
+            if (i % 2 == 0){ // vibration
+                pattern[i] = 150;
+            }else{
+                pattern[i] = 300;
+            }
+
+        }
+        vibrator.vibrate(pattern, -1);
+    }
+
+    private void setupTTS() {
+        if (tts != null){
+            Log.d("tts not null", "tts not null");
+            return;
+        }
+
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS){
+                    loadedTts = true;
+                    tts.setLanguage(Locale.CANADA);
+                }else{
+                    loadedTts = false;
+                }
+            }
+        });
+
+    }
+
+    private void setupVibrator() {
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+    }
+
+    private void closeTTS() {
+        if (tts != null){
+            tts.stop();
+            tts.shutdown();
         }
     }
 }
