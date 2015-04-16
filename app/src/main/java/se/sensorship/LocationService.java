@@ -39,6 +39,9 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private NotificationManager notificationManager;
     private Notification.Builder notificationBuilder;
 
+    private boolean isAllDone = true;
+    private final Object lock = new Object();
+
 
     public LocationService() {
     }
@@ -89,7 +92,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     @Override
     public void onConnected(Bundle bundle) {
         LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(1000);
+        locationRequest.setInterval(1500);
+        locationRequest.setFastestInterval(1500);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,
                 locationRequest, this);
@@ -107,6 +111,11 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     @Override
     public void onLocationChanged(Location location) {
+        onLocationChangedSynchronized(location);
+    }
+
+    private synchronized void onLocationChangedSynchronized(Location location) {
+        long time = System.currentTimeMillis();
         route.updateLocation(location);
         boolean isOnTrack = route.isOnTrack();
         if (!isOnTrack){
@@ -115,33 +124,31 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         }
         int progress = route.getClosestPointOnPathIndex();
         float elapsedDistance = route.getElapsedDistance();
-        updateNotification(progress,elapsedDistance);
+        updateNotification(progress, elapsedDistance);
 
         Log.d(TAG, "distanceToNextDirection: " + route.distanceToNextDirectionPoint());
         prevLocation = location;
         if (route.distanceToNextDirectionPoint() > 50){
-//            return;
+            int direction = route.directionOnNextDirectionPoint();
+            if (direction == Direction.LEFT){
+                speak("Left");
+                vibrate(2);
+                Log.d(TAG, "TURN LEFT!");
+            }else if (direction == Direction.RIGHT){
+                speak("Right");
+                vibrate(1);
+                Log.d(TAG, "TURN RIGHT!");
+            }else if (direction == Direction.GOAL){
+                Log.d(TAG, "GOAL");
+            }
         }
-        int direction = route.directionOnNextDirectionPoint();
-        if (direction == Direction.LEFT){
-            speak("Left");
-            vibrate(2);
-            Log.d(TAG, "TURN LEFT!");
-        }else if (direction == Direction.RIGHT){
-            speak("Right");
-            vibrate(1);
-            Log.d(TAG, "TURN RIGHT!");
-        }else if (direction == Direction.GOAL){
-            Log.d(TAG, "GOAL");
-        }
-        Log.d(TAG, "#END");
     }
 
 
     private void updateNotification(int currentPositionInPathIndex, float distanceInMeter) {
         float distanceInKm = distanceInMeter / 1000;
         notificationBuilder.setProgress(route.getPathSize(), currentPositionInPathIndex, false);
-        notificationBuilder.setContentText("Distance: " + String.format("%.2f", distanceInKm) +
+        notificationBuilder.setContentText("Distance: " + String.format("%.1f", distanceInKm) +
                 "km");
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
     }
@@ -152,10 +159,10 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
             return;
         }
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP){
-            tts.speak(text, TextToSpeech.QUEUE_ADD, null, null);
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
         }else{
             //noinspection deprecation
-            tts.speak(text, TextToSpeech.QUEUE_ADD, null);
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
 
     }
