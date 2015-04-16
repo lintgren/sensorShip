@@ -1,6 +1,7 @@
 package se.sensorship;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -34,6 +36,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private TextToSpeech tts;
     private Vibrator vibrator;
     private Location prevLocation;
+    private NotificationManager notificationManager;
 
     public LocationService() {
     }
@@ -54,6 +57,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         googleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
         googleApiClient.connect();
+
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         Notification notification = new Notification.Builder(this).setContentTitle
                 ("LocationActivity").setContentText(new Date().toString()).setSmallIcon(R
@@ -100,12 +105,15 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
             float bearing = prevLocation.bearingTo(location);
             location.setBearing(bearing);
         }
-
         if (!route.isOnTrack(location)) {
             Log.e(TAG, "NOT ON TRACK!");
         }
         Log.d(TAG, "distanceToNextDirection: " + route.distanceToNextDirectionPoint(location));
         prevLocation = location;
+        int progress = route.getClosestPointOnPathIndex(location);
+        updateNotification(progress);
+
+
         if(route.distanceToNextDirectionPoint(location)>50){
             return;
         }
@@ -122,6 +130,17 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
             Log.d(TAG, "GOAL");
         }
     }
+
+
+    private void updateNotification(int currentPositionInPathIndex){
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+        mBuilder.setProgress(route.getPathLengthInNbr(), currentPositionInPathIndex, false);
+        notificationManager.notify(NOTIFICATION_ID,mBuilder.build());
+
+    }
+
+
     private void speak(String text) {
         if (!loadedTts){
             return;
