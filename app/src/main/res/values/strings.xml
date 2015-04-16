@@ -14,7 +14,11 @@
     <string name="duration">Duration</string>
     <string name="minutes">Minutes</string>
     <string name="hours">Hours</string>
-    <string name="title_activity_new_adventure" />
-
+    <string name="title_activity_new_adventure"></string>
+    <string name="date_time">Date: </string>
+    <string name="speed">Avg Speed: </string>
+    <string name="distance">Distance: </string>
+    <string name="lap_duration">Duration: </string>
+    <string name="past_runs">Past runs</string>
 
 </resources>
