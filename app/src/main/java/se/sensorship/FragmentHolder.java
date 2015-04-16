@@ -11,6 +11,10 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.Spinner;
 
 /**
  * Created by Andy on 15-04-14.
@@ -43,9 +47,10 @@ public class FragmentHolder extends FragmentActivity {
                 });
         mViewPager.setAdapter(mDemoCollectionPagerAdapter);
         final ActionBar actionBar = getActionBar();
-
-        // Specify that tabs should be displayed in the action bar.
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
+        // Specify that tabs should be displayed in the action bar.
 
         // Create a tab listener that is called when the user changes tabs.
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
@@ -63,13 +68,16 @@ public class FragmentHolder extends FragmentActivity {
             }
         };
 
-        // Add 3 tabs, specifying the tab's text and TabListener
-        for (int i = 0; i < 2; i++) {
-            actionBar.addTab(
-                    actionBar.newTab()
-                            .setText("Tab " + (i + 1))
-                            .setTabListener(tabListener));
-        }
+
+        // Add 2 tabs, specifying the tab's text and TabListener
+        actionBar.addTab(
+                actionBar.newTab()
+                        .setText("History")
+                        .setTabListener(tabListener));
+        actionBar.addTab(
+                actionBar.newTab()
+                        .setText("Start")
+                        .setTabListener(tabListener));
         mViewPager.setCurrentItem(1);
     }
 
@@ -82,14 +90,14 @@ public class FragmentHolder extends FragmentActivity {
 
         @Override
         public Fragment getItem(int i) {
-            if(i == 0){
+            if (i == 0) {
                 Fragment fragment = new DemoObjectFragment();
                 Bundle args = new Bundle();
                 // Our object is just an integer :-P
                 args.putInt(DemoObjectFragment.ARG_OBJECT, i + 1);
                 fragment.setArguments(args);
                 return fragment;
-            }else{
+            } else {
                 Fragment fragment = new StartFragment();
                 Bundle args = new Bundle();
                 // Our object is just an integer :-P
@@ -112,9 +120,12 @@ public class FragmentHolder extends FragmentActivity {
 
     // Instances of this class are fragments representing a single
 // object in our collection.
-    public static class DemoObjectFragment extends Fragment {
+    public static class DemoObjectFragment extends Fragment implements AdapterView.OnItemSelectedListener {
         public static final String ARG_OBJECT = "object";
 
+        Spinner spinner;
+        ImageView map;
+        String[] lap;
         @Override
         public View onCreateView(LayoutInflater inflater,
                                  ViewGroup container, Bundle savedInstanceState) {
@@ -123,9 +134,36 @@ public class FragmentHolder extends FragmentActivity {
             View rootView = inflater.inflate(
                     R.layout.fragment_history, container, false);
             Bundle args = getArguments();
-//            ((TextView) rootView.findViewById(android.R.id.text1)).setText(
-//                    Integer.toString(args.getInt(ARG_OBJECT)));
+
+            spinner = (Spinner) rootView.findViewById(R.id.prev_runs);
+            lap = getResources().getStringArray(R.array.prev_runs);
+            map = (ImageView) rootView.findViewById(R.id.ivMap);
+            spinner.setOnItemSelectedListener(this);
+            // Create an ArrayAdapter using the string array and a default spinner layout
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                    R.array.prev_runs, android.R.layout.simple_spinner_item);
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            // Apply the adapter to the spinner
+            spinner.setAdapter(adapter);
+
             return rootView;
         }
+
+        public void onItemSelected(AdapterView<?> parent, View view,
+                                   int pos, long id) {
+            if (parent.getItemAtPosition(pos).equals(lap[1])){
+                map.setImageResource(R.drawable.karta1);
+            }else{
+                map.setImageResource(R.drawable.karta);
+            }
+            // An item was selected. You can retrieve the selected item using
+            // parent.getItemAtPosition(pos)
+        }
+
+        public void onNothingSelected(AdapterView<?> parent) {
+            // Another interface callback
+        }
+
     }
 }

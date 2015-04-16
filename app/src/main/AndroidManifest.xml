@@ -33,11 +33,12 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAZqdkjjgA4hNojokm4Ai-nQK52pQ07jgY" />
 
-        <activity
-            android:name=".MainActivityFuture"
-            android:label="@string/title_activity_main_activity_future" />
 
-        <activity android:name=".FragmentHolder"/>
+        <activity android:uiOptions="splitActionBarWhenNarrow"
+            android:name=".FragmentHolder">
+        <meta-data android:name="android.support.UI_OPTIONS"
+            android:value="splitActionBarWhenNarrow" />
+    </activity>
 
         <service
             android:name=".LocationService"
