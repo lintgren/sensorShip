@@ -59,10 +59,9 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         googleApiClient.connect();
 
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
         Notification notification = new Notification.Builder(this).setContentTitle
                 ("LocationActivity").setContentText(new Date().toString()).setSmallIcon(R
-                .drawable.powered_by_google_light).setProgress(route.getPathLengthInNbr(),0,false).build();
+                .drawable.powered_by_google_light).setProgress(route.getPathSize(),0,false).build();
         Intent notificationIntent = new Intent(this, LocationService.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         startForeground(NOTIFICATION_ID, notification);
@@ -111,7 +110,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         Log.d(TAG, "distanceToNextDirection: " + route.distanceToNextDirectionPoint(location));
         prevLocation = location;
         int progress = route.getClosestPointOnPathIndex(location);
-        updateNotification(progress);
+//        updateNotification(progress);
 
 
         if(route.distanceToNextDirectionPoint(location)>50){
@@ -135,7 +134,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private void updateNotification(int currentPositionInPathIndex){
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-        mBuilder.setProgress(route.getPathLengthInNbr(), currentPositionInPathIndex, false);
+        mBuilder.setProgress(route.getPathSize(), currentPositionInPathIndex, false);
         notificationManager.notify(NOTIFICATION_ID,mBuilder.build());
     }
 

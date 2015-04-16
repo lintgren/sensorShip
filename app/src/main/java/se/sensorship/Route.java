@@ -213,7 +213,7 @@ public class Route {
         return directions[directionPointIndex].getDirection();
     }
 
-    public int getPathLengthInNbr(){
+    public int getPathSize(){
         return path.length;
     }
 
