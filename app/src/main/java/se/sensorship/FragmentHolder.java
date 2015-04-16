@@ -1,5 +1,7 @@
 package se.sensorship;
 
+import android.app.ActionBar;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -30,7 +32,46 @@ public class FragmentHolder extends FragmentActivity {
                 new DemoCollectionPagerAdapter(
                         getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setOnPageChangeListener(
+                new ViewPager.SimpleOnPageChangeListener() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        // When swiping between pages, select the
+                        // corresponding tab.
+                        getActionBar().setSelectedNavigationItem(position);
+                    }
+                });
         mViewPager.setAdapter(mDemoCollectionPagerAdapter);
+
+        final ActionBar actionBar = getActionBar();
+
+        // Specify that tabs should be displayed in the action bar.
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        // Create a tab listener that is called when the user changes tabs.
+        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                mViewPager.setCurrentItem(tab.getPosition());
+                // show the given tab
+            }
+
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // hide the given tab
+            }
+
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // probably ignore this event
+            }
+        };
+
+        // Add 3 tabs, specifying the tab's text and TabListener
+        for (int i = 0; i < 2; i++) {
+            actionBar.addTab(
+                    actionBar.newTab()
+                            .setText("Tab " + (i + 1))
+                            .setTabListener(tabListener));
+        }
+
     }
 
     // Since this is an object collection, use a FragmentStatePagerAdapter,
