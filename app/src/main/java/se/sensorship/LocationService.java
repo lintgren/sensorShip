@@ -92,6 +92,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         if(!route.isOnTrack(location)){
             Log.e(TAG,"NOT ON TRACK!");
         }
+        Log.d(TAG,"distanceToNextDirection: " + route.distanceToNextDirectionPoint(location));
         prevLocation = location;
     }
 }

@@ -19,15 +19,16 @@ public class Route {
     private final String TAG = "Route";
     Polyline pathDirectionLine;
     private LatLng[] path;
-    private Direction[] turns;
+    private Direction[] directions;
+    private List<Integer> turnDirectionOnPathIndex = new ArrayList<>();
 
-    public Route(Direction[] turns, LatLng[] path) {
-        this.turns = turns;
+    public Route(Direction[] directions, LatLng[] path) {
+        this.directions = directions;
         this.path = path;
 
-        List<Integer> turnDirectionOnPathIndex = new ArrayList<>();
+
         int closestPointOnPathIndex = 0;
-        for (int turnIndex = 0; turnIndex < turns.length; turnIndex++) {
+        for (int turnIndex = 0; turnIndex < directions.length; turnIndex++) {
             float closestPointOnPathToTurnDistance = Float.MAX_VALUE;
 
             for (int pathIndex = closestPointOnPathIndex; pathIndex < path.length; pathIndex++) {
@@ -35,7 +36,7 @@ public class Route {
                     break;
                 }
                 Location pathPoint = convertLatLngToLocation(path[pathIndex]);
-                Location turnPoint = convertLatLngToLocation(turns[turnIndex].getLocation());
+                Location turnPoint = convertLatLngToLocation(directions[turnIndex].getLocation());
                 float distance = pathPoint.distanceTo(turnPoint);
                 if (distance <= closestPointOnPathToTurnDistance) {
                     closestPointOnPathToTurnDistance = distance;
@@ -210,10 +211,20 @@ public class Route {
     }
     */
 
-    public double distanceToNextDirectionPoint(Location currentLocation) {
-
-
-        return 0;
+    public double distanceToNextDirectionPoint(Location currentLocation){
+        int directionPointOnPathIndex=0;
+        int currentIndexOnPath = getClosestPointOnPathIndex(currentLocation);
+        for(Integer i : turnDirectionOnPathIndex){
+            if(i>currentIndexOnPath) {
+                directionPointOnPathIndex = i;
+                break;
+            }
+        }
+        float distance=0;
+        for(int i = currentIndexOnPath; i < directionPointOnPathIndex;i++){
+            distance += convertLatLngToLocation(path[i]).distanceTo(convertLatLngToLocation(path[i+1]));
+        }
+        return distance;
     }
 
 
