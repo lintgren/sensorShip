@@ -192,25 +192,6 @@ public class Route {
         return closestPointOnPathIndex;
     }
 
-    /*
-    private void updatePathDirectionLine(int closestPointIndex) {
-
-        if (LocationActivity.mMap == null) {
-            return;
-        }
-        if (pathDirectionLine != null) {
-            pathDirectionLine.remove();
-        }
-        PolylineOptions polylineOptions = new PolylineOptions();
-        polylineOptions.color(Color.YELLOW);
-        if (closestPointIndex > 0 && closestPointIndex < path.length - 1) {
-            polylineOptions.add(path[closestPointIndex - 1]);
-            polylineOptions.add(path[closestPointIndex + 1]);
-        }
-        pathDirectionLine = LocationActivity.mMap.addPolyline(polylineOptions);
-    }
-    */
-
     public double distanceToNextDirectionPoint(Location currentLocation) {
         int currentIndexOnPath = getClosestPointOnPathIndex(currentLocation);
         int directionPointOnPathIndex = 0;
@@ -241,15 +222,7 @@ public class Route {
                 break;
             }
         }
-
         return directions[directionPointIndex].getDirection();
-         /**
-         * path[LÅNG] = [LATLNG1, LATLNG2]
-         * turnDirectionOnPathIndex = [11, 189, LAST]
-         * directions[2] = Direction1, direction2, GOAL;
-         *
-         */
-
     }
 
     private Location convertLatLngToLocation(LatLng source) {
