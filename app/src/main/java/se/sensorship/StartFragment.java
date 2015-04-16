@@ -1,41 +1,47 @@
 package se.sensorship;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
+import android.widget.ToggleButton;
 
 
 public class StartFragment extends Fragment implements View.OnClickListener {
-    private Button distanceButton;
-    private Button durationButton;
-    private RelativeLayout durationPickerLayout;
-    private RelativeLayout distancePickerLayout;
+    private Button rundomizerButton;
+    private ToggleButton distanceButton, durationButton;
+    private RelativeLayout durationPickerLayout, distancePickerLayout;
+    private NumberPicker minutesPicker, hoursPicker, distancePicker;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_start, container, false);
-        NumberPicker distancePicker = (NumberPicker) v.findViewById(R.id.distance_picker);
+        distancePicker = (NumberPicker) v.findViewById(R.id.distance_picker);
         distancePicker.setMaxValue(100);
         distancePicker.setMinValue(0);
 
-        NumberPicker minutesPicker = (NumberPicker) v.findViewById(R.id.minutes_picker);
+        minutesPicker = (NumberPicker) v.findViewById(R.id.minutes_picker);
         minutesPicker.setMaxValue(59);
         minutesPicker.setMinValue(0);
 
-        NumberPicker hoursPicker = (NumberPicker) v.findViewById(R.id.hours_picker);
+        hoursPicker = (NumberPicker) v.findViewById(R.id.hours_picker);
         hoursPicker.setMaxValue(23);
         hoursPicker.setMinValue(0);
 
-        distanceButton = (Button) v.findViewById(R.id.distance_button);
-        durationButton = (Button) v.findViewById(R.id.duration_button);
+        distanceButton = (ToggleButton) v.findViewById(R.id.distance_button);
+        durationButton = (ToggleButton) v.findViewById(R.id.duration_button);
+        rundomizerButton = (Button) v.findViewById(R.id.rundomize_button);
+
         distanceButton.setBackgroundColor(getResources().getColor(R.color.button_material_dark));
         durationButton.setBackgroundColor(getResources().getColor(R.color.button_material_light));
+        rundomizerButton.setOnClickListener(this);
         distanceButton.setOnClickListener(this);
         durationButton.setOnClickListener(this);
 
@@ -48,7 +54,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
     private void distanceButtonClicked() {
         distanceButton.setBackgroundColor(getResources().getColor(R.color.button_material_dark));
         durationButton.setBackgroundColor(getResources().getColor(R.color.button_material_light));
-
+        durationButton.setChecked(false);
         durationPickerLayout.setVisibility(View.INVISIBLE);
         distancePickerLayout.setVisibility(View.VISIBLE);
     }
@@ -56,6 +62,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
     public void durationButtonClicked() {
         durationButton.setBackgroundColor(getResources().getColor(R.color.button_material_dark));
         distanceButton.setBackgroundColor(getResources().getColor(R.color.button_material_light));
+        distanceButton.setChecked(false);
 
         durationPickerLayout.setVisibility(View.VISIBLE);
         distancePickerLayout.setVisibility(View.INVISIBLE);
@@ -71,6 +78,27 @@ public class StartFragment extends Fragment implements View.OnClickListener {
             case (R.id.duration_button):
                 durationButtonClicked();
                 break;
+            case (R.id.rundomize_button):
+                Log.d("Häär", "hit");
+                Intent intent = new Intent(getActivity(), RunningActivity.class);
+                if (durationButton.isChecked()) {
+                    int duration = getTime();
+                    intent.putExtra("duration", duration);
+                }
+                if (distanceButton.isChecked()) {
+                    int distance = getDistance();
+                    intent.putExtra("distance", distance);
+                }
+                startActivity(intent);
+                break;
         }
+    }
+
+    private int getTime() {
+        return minutesPicker.getValue() + hoursPicker.getValue() * 60;
+    }
+
+    private int getDistance() {
+        return distancePicker.getValue();
     }
 }

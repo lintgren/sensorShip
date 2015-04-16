@@ -16,6 +16,7 @@
     <string name="hours">Hours</string>
     <string name="title_activity_new_adventure" />
     <string name="rundomize">Rundomize</string>
+    <string name="title_activity_running">RunningActivity</string>
 
 
 </resources>

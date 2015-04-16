@@ -12,19 +12,21 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true">
 
-        <Button
+        <ToggleButton
             android:id="@+id/distance_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="@string/distance_button" />
+            android:textOff="@string/distance_button"
+            android:textOn="@string/distance_button" />
 
-        <Button
+        <ToggleButton
             android:id="@+id/duration_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="@string/duration_button" />
+            android:textOn="@string/duration_button"
+            android:textOff="@string/duration_button" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -112,6 +114,7 @@
 
 
     <Button
+        android:id="@+id/rundomize_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/duration_picker_layout"

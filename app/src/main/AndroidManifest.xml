@@ -33,17 +33,18 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAZqdkjjgA4hNojokm4Ai-nQK52pQ07jgY" />
 
-        <activity
-            android:name=".MainActivityFuture"
-            android:label="@string/title_activity_main_activity_future" />
 
-        <activity android:name=".FragmentHolder"/>
+        <activity android:name=".FragmentHolder" />
 
         <service
             android:name=".LocationService"
             android:enabled="true"
             android:exported="true" >
         </service>
+
+        <activity
+            android:name=".RunningActivity"
+            android:label="@string/title_activity_running" />
     </application>
 
 </manifest>
