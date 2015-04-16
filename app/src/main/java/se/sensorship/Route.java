@@ -22,6 +22,9 @@ public class Route {
     private Direction[] directions;
     private List<Integer> turnDirectionOnPathIndex = new ArrayList<>();
 
+    private Location currentLocation;
+    private int closestPointOnPathIndex = 0;
+
     public Route(Direction[] directions, LatLng[] path) {
         this.directions = directions;
         this.path = path;
@@ -166,20 +169,38 @@ public class Route {
         return pointsToTurn;
     }
 
+    public void updateLocation(Location location) {
+        currentLocation = location;
+        updateClosestPointOnPathIndex();
+    }
+
+    private void updateClosestPointOnPathIndex() {
+        closestPointOnPathIndex = 0;
+        float distanceToTrack = Float.MAX_VALUE;
+        for (int pathIndex = 0; pathIndex < path.length; pathIndex++){
+            LatLng pointOnPath = path[pathIndex];
+            float distance = currentLocation.distanceTo(convertLatLngToLocation(pointOnPath));
+            if (distance < distanceToTrack){
+                distanceToTrack = distance;
+                closestPointOnPathIndex = pathIndex;
+            }
+        }
+    }
+
     /**
      * retunerar om användaren befinner sig inom PATH ( på rimligt avstånd och i rätt riktning)
      */
-    public boolean isOnTrack(Location currentLocation) {
-        int closestPointIndex = getClosestPointOnPathIndex(currentLocation);
+    public boolean isOnTrack() {
+        int closestPointIndex = getClosestPointOnPathIndex();
         float distanceToTrack = currentLocation.distanceTo(convertLatLngToLocation
                 (path[closestPointIndex]));
-        if (closestPointIndex < path.length - 1) Log.d(TAG, "Distance: " + distanceToTrack);
+        Log.d(TAG, "Distance: " + distanceToTrack);
         return distanceToTrack < 20;
     }
 
 
-    public double distanceToNextDirectionPoint(Location currentLocation) {
-        int currentIndexOnPath = getClosestPointOnPathIndex(currentLocation);
+    public double distanceToNextDirectionPoint() {
+        int currentIndexOnPath = getClosestPointOnPathIndex();
         int directionPointOnPathIndex = 0;
         for (Integer i : turnDirectionOnPathIndex){
             if (i > currentIndexOnPath){
@@ -202,8 +223,8 @@ public class Route {
      * Servicen kanske ska få en notifiering när denna behöver anropas? isOnTrack kan hålla reda
      * på om förra punkten är passerad eller ej
      */
-    public int directionOnNextDirectionPoint(Location currentLocation) {
-        int currentIndexOnPath = getClosestPointOnPathIndex(currentLocation);
+    public int directionOnNextDirectionPoint() {
+        int currentIndexOnPath = getClosestPointOnPathIndex();
         int directionPointIndex = 0;
         for (; directionPointIndex < turnDirectionOnPathIndex.size(); directionPointIndex++){
             if (turnDirectionOnPathIndex.get(directionPointIndex) > currentIndexOnPath){
@@ -213,21 +234,11 @@ public class Route {
         return directions[directionPointIndex].getDirection();
     }
 
-    public int getPathSize(){
+    public int getPathSize() {
         return path.length;
     }
 
-    public int getClosestPointOnPathIndex(Location location) {
-        int closestPointOnPathIndex = 0;
-        float distanceToTrack = Float.MAX_VALUE;
-        for (int pathIndex = 0; pathIndex < path.length; pathIndex++){
-            LatLng pointOnPath = path[pathIndex];
-            float distance = location.distanceTo(convertLatLngToLocation(pointOnPath));
-            if (distance < distanceToTrack){
-                distanceToTrack = distance;
-                closestPointOnPathIndex = pathIndex;
-            }
-        }
+    public int getClosestPointOnPathIndex() {
         return closestPointOnPathIndex;
     }
 
@@ -239,4 +250,13 @@ public class Route {
     }
 
 
+    public float getElapsedDistance() {
+        int currentIndexOnPath = getClosestPointOnPathIndex();
+        float distance = 0;
+        for (int i = 0; i < currentIndexOnPath; i++){
+            distance += convertLatLngToLocation(path[i]).distanceTo(convertLatLngToLocation
+                    (path[i + 1]));
+        }
+        return distance;
+    }
 }

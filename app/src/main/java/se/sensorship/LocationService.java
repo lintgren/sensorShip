@@ -37,6 +37,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private Vibrator vibrator;
     private Location prevLocation;
     private NotificationManager notificationManager;
+    private Notification.Builder notificationBuilder;
+
 
     public LocationService() {
     }
@@ -47,9 +49,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand");
-
+    public void onCreate() {
+        Log.d(TAG, "onCreate");
         route = new Route();
         setupTTS();
         setupVibrator();
@@ -59,12 +60,19 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         googleApiClient.connect();
 
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification.Builder(this).setContentTitle
-                ("LocationActivity").setContentText(new Date().toString()).setSmallIcon(R
-                .drawable.powered_by_google_light).setProgress(route.getPathSize(),0,false).build();
+        notificationBuilder = new Notification.Builder(this);
+        notificationBuilder.setContentTitle("Rundomizer");
+        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        notificationBuilder.setProgress(route.getPathSize(), 0, false);
         Intent notificationIntent = new Intent(this, LocationService.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        startForeground(NOTIFICATION_ID, notification);
+        startForeground(NOTIFICATION_ID, notificationBuilder.build());
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "onStartCommand");
+
 
         return START_STICKY;
     }
@@ -72,8 +80,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient,
-                this);
+        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
         closeTTS();
         Log.d("tts Destroy", "tts Destroy");
         super.onDestroy();
@@ -100,42 +107,43 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     @Override
     public void onLocationChanged(Location location) {
-        if (prevLocation != null) {
-            float bearing = prevLocation.bearingTo(location);
-            location.setBearing(bearing);
-        }
-        if (!route.isOnTrack(location)) {
+        route.updateLocation(location);
+        boolean isOnTrack = route.isOnTrack();
+        if (!isOnTrack){
             Log.e(TAG, "NOT ON TRACK!");
+            //TODO lämna meddelande till användaren?
         }
-        Log.d(TAG, "distanceToNextDirection: " + route.distanceToNextDirectionPoint(location));
+        int progress = route.getClosestPointOnPathIndex();
+        float elapsedDistance = route.getElapsedDistance();
+        updateNotification(progress,elapsedDistance);
+
+        Log.d(TAG, "distanceToNextDirection: " + route.distanceToNextDirectionPoint());
         prevLocation = location;
-        int progress = route.getClosestPointOnPathIndex(location);
-//        updateNotification(progress);
-
-
-        if(route.distanceToNextDirectionPoint(location)>50){
-            return;
+        if (route.distanceToNextDirectionPoint() > 50){
+//            return;
         }
-        int direction = route.directionOnNextDirectionPoint(location);
-        if (direction == Direction.LEFT) {
+        int direction = route.directionOnNextDirectionPoint();
+        if (direction == Direction.LEFT){
             speak("Left");
             vibrate(2);
             Log.d(TAG, "TURN LEFT!");
-        } else if (direction == Direction.RIGHT) {
+        }else if (direction == Direction.RIGHT){
             speak("Right");
             vibrate(1);
             Log.d(TAG, "TURN RIGHT!");
-        } else if (direction == Direction.GOAL) {
+        }else if (direction == Direction.GOAL){
             Log.d(TAG, "GOAL");
         }
+        Log.d(TAG, "#END");
     }
 
 
-    private void updateNotification(int currentPositionInPathIndex){
-
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-        mBuilder.setProgress(route.getPathSize(), currentPositionInPathIndex, false);
-        notificationManager.notify(NOTIFICATION_ID,mBuilder.build());
+    private void updateNotification(int currentPositionInPathIndex, float distanceInMeter) {
+        float distanceInKm = distanceInMeter / 1000;
+        notificationBuilder.setProgress(route.getPathSize(), currentPositionInPathIndex, false);
+        notificationBuilder.setContentText("Distance: " + String.format("%.2f", distanceInKm) +
+                "km");
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
     }
 
 
