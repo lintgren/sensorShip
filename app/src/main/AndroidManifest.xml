@@ -34,17 +34,17 @@
             android:value="AIzaSyAZqdkjjgA4hNojokm4Ai-nQK52pQ07jgY" />
 
 
-        <activity android:uiOptions="splitActionBarWhenNarrow"
-            android:name=".FragmentHolder">
-        <meta-data android:name="android.support.UI_OPTIONS"
-            android:value="splitActionBarWhenNarrow" />
-    </activity>
+        <activity android:name=".FragmentHolder"/>
 
         <service
             android:name=".LocationService"
             android:enabled="true"
             android:exported="true" >
         </service>
+
+        <activity
+            android:name=".RunningActivity"
+            android:label="@string/title_activity_running" />
     </application>
 
 </manifest>
