@@ -42,7 +42,6 @@ public class FragmentHolder extends FragmentActivity {
                     }
                 });
         mViewPager.setAdapter(mDemoCollectionPagerAdapter);
-
         final ActionBar actionBar = getActionBar();
 
         // Specify that tabs should be displayed in the action bar.
@@ -71,7 +70,7 @@ public class FragmentHolder extends FragmentActivity {
                             .setText("Tab " + (i + 1))
                             .setTabListener(tabListener));
         }
-
+        mViewPager.setCurrentItem(1);
     }
 
     // Since this is an object collection, use a FragmentStatePagerAdapter,
@@ -83,12 +82,21 @@ public class FragmentHolder extends FragmentActivity {
 
         @Override
         public Fragment getItem(int i) {
-            Fragment fragment = new DemoObjectFragment();
-            Bundle args = new Bundle();
-            // Our object is just an integer :-P
-            args.putInt(DemoObjectFragment.ARG_OBJECT, i + 1);
-            fragment.setArguments(args);
-            return fragment;
+            if(i == 0){
+                Fragment fragment = new DemoObjectFragment();
+                Bundle args = new Bundle();
+                // Our object is just an integer :-P
+                args.putInt(DemoObjectFragment.ARG_OBJECT, i + 1);
+                fragment.setArguments(args);
+                return fragment;
+            }else{
+                Fragment fragment = new StartFragment();
+                Bundle args = new Bundle();
+                // Our object is just an integer :-P
+                args.putInt(DemoObjectFragment.ARG_OBJECT, i + 1);
+                fragment.setArguments(args);
+                return fragment;
+            }
         }
 
         @Override
@@ -113,7 +121,7 @@ public class FragmentHolder extends FragmentActivity {
             // The last two arguments ensure LayoutParams are inflated
             // properly.
             View rootView = inflater.inflate(
-                    R.layout.fragment_new_adventure, container, false);
+                    R.layout.fragment_start, container, false);
             Bundle args = getArguments();
 //            ((TextView) rootView.findViewById(android.R.id.text1)).setText(
 //                    Integer.toString(args.getInt(ARG_OBJECT)));
