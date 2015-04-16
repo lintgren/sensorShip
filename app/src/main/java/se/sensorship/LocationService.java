@@ -62,7 +62,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
         Notification notification = new Notification.Builder(this).setContentTitle
                 ("LocationActivity").setContentText(new Date().toString()).setSmallIcon(R
-                .drawable.powered_by_google_light).build();
+                .drawable.powered_by_google_light).setProgress(route.getPathLengthInNbr(),0,false).build();
         Intent notificationIntent = new Intent(this, LocationService.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         startForeground(NOTIFICATION_ID, notification);
@@ -137,7 +137,6 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setProgress(route.getPathLengthInNbr(), currentPositionInPathIndex, false);
         notificationManager.notify(NOTIFICATION_ID,mBuilder.build());
-
     }
 
 

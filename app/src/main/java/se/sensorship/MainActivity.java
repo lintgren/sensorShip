@@ -72,6 +72,6 @@ public class MainActivity extends Activity {
     }
     public void startFragment(View v){
         Intent intent = new Intent(this, FragmentHolder.class);
-        startService(intent);
+        startActivity(intent);
     }
 }

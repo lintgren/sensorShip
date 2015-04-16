@@ -37,6 +37,8 @@
             android:name=".MainActivityFuture"
             android:label="@string/title_activity_main_activity_future" />
 
+        <activity android:name=".FragmentHolder"/>
+
         <service
             android:name=".LocationService"
             android:enabled="true"
