@@ -128,18 +128,14 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
         Log.d(TAG, "distanceToNextDirection: " + route.distanceToNextDirectionPoint());
         prevLocation = location;
-        if (route.distanceToNextDirectionPoint() > 50){
-            int direction = route.directionOnNextDirectionPoint();
-            if (direction == Direction.LEFT){
-                speak("Left");
+        if (route.distanceToNextDirectionPoint() < 50){
+            String direction = route.directionOnNextDirectionPoint();
+            speak(direction);
+            Log.d(TAG, "TURN " + direction);
+            if (direction.equals(Direction.LEFT)){
                 vibrate(2);
-                Log.d(TAG, "TURN LEFT!");
-            }else if (direction == Direction.RIGHT){
-                speak("Right");
+            }else if (direction.equals(Direction.RIGHT)){
                 vibrate(1);
-                Log.d(TAG, "TURN RIGHT!");
-            }else if (direction == Direction.GOAL){
-                Log.d(TAG, "GOAL");
             }
         }
     }

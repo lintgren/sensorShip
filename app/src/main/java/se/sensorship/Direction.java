@@ -7,20 +7,20 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class Direction {
     private com.google.android.gms.maps.model.LatLng location;
-    private int direction;
-    public final static int LEFT = -1;
-    public final static int RIGHT = 1;
-    public final static int STRAIGHT = 0;
-    public final static int GOAL = 1337;
+    private String direction;
+    public final static String LEFT = "Left";
+    public final static String RIGHT = "Right";
+    public final static String STRAIGHT = "Straight";
+    public final static String GOAL = "Finished";
 
-    public Direction(LatLng location, int direction){
+    public Direction(LatLng location, String direction){
         this.location = location;
         this.direction = direction;
     }
-    public Direction(double lat, double lon, int direction){
+    public Direction(double lat, double lon, String direction){
        this(new LatLng(lat,lon),direction);
     }
-    public int getDirection() {
+    public String getDirection() {
         return direction;
     }
 

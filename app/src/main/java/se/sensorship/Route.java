@@ -223,7 +223,7 @@ public class Route {
      * Servicen kanske ska få en notifiering när denna behöver anropas? isOnTrack kan hålla reda
      * på om förra punkten är passerad eller ej
      */
-    public int directionOnNextDirectionPoint() {
+    public String directionOnNextDirectionPoint() {
         int currentIndexOnPath = getClosestPointOnPathIndex();
         int directionPointIndex = 0;
         for (; directionPointIndex < turnDirectionOnPathIndex.size(); directionPointIndex++){
