@@ -17,6 +17,7 @@ import java.util.List;
  */
 public class Route implements Serializable {
     static List<LatLng> pointsToTurn = new ArrayList<LatLng>();
+    static LatLng[] static_path;
     private final String TAG = "Route";
     Polyline pathDirectionLine;
     private LatLng[] path;
@@ -29,6 +30,7 @@ public class Route implements Serializable {
     public Route(Direction[] directions, LatLng[] path) {
         this.directions = directions;
         this.path = path;
+        static_path = path;
         int closestPointOnPathIndex = 0;
         for (int turnIndex = 0; turnIndex < directions.length; turnIndex++) {
             float closestPointOnPathToTurnDistance = Float.MAX_VALUE;
@@ -51,11 +53,6 @@ public class Route implements Serializable {
         }
         Log.d(TAG, "point to turn: " + turnDirectionOnPathIndex.toString());
 
-    }
-
-    public Route(String place) {
-        this(new Direction[]{new Direction(55.703503700000006, 13.2191062, Direction.LEFT)}, new LatLng[]{new LatLng(5.714879, 13.211993), new LatLng(5.714879, 13.211993), new LatLng(5.714927, 13.211742), new LatLng(5.714972, 13.21146), new LatLng(5.715019, 13.211201), new LatLng(5.715036, 13.211121), new LatLng(5.715196, 13.211357), new LatLng(5.715299, 13.211585), new LatLng(5.71538, 13.21185), new LatLng(5.715421, 13.212169), new LatLng(5.715288, 13.212151), new LatLng(5.715035, 13.212179), new LatLng(5.714914, 13.212089), new LatLng(5.714914, 13.212089), new LatLng(5.714914, 13.212089)
-        });
     }
 
     public Route() {
@@ -264,5 +261,10 @@ public class Route implements Serializable {
                     (path[i + 1]));
         }
         return distance;
+    }
+
+    //TODO remove
+    public static LatLng[] getStatic_path() {
+        return static_path;
     }
 }
