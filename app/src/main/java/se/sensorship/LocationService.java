@@ -67,9 +67,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
         Bundle extras = intent.getExtras();
 
-        route = new Route(new Direction[]{new Direction(55.714916, 13.211974, Direction.STRAIGHT), new Direction(55.715079, 13.211094, Direction.RIGHT), new Direction(55.715396, 13.212231, Direction.LEFT)}, new LatLng[]{new LatLng(5.714879, 13.211993), new LatLng(5.714879, 13.211993), new LatLng(5.714927, 13.211742), new LatLng(5.714972, 13.21146), new LatLng(5.715019, 13.211201), new LatLng(5.715036, 13.211121), new LatLng(5.715196, 13.211357), new LatLng(5.715299, 13.211585), new LatLng(5.71538, 13.21185), new LatLng(5.715421, 13.212169), new LatLng(5.715288, 13.212151), new LatLng(5.715035, 13.212179), new LatLng(5.714914, 13.212089), new LatLng(5.714914, 13.212089), new LatLng(5.714914, 13.212089)});
-
-
+        route = new Route(new Direction[]{new Direction(55.714916, 13.211974, Direction.STRAIGHT), new Direction(55.715079, 13.211094, Direction.RIGHT), new Direction(55.715396, 13.212231, Direction.LEFT)}, new LatLng[]{new LatLng(55.714879, 13.211993), new LatLng(55.714879, 13.211993), new LatLng(55.714927, 13.211742), new LatLng(55.714972, 13.21146), new LatLng(55.715019, 13.211201), new LatLng(55.715036, 13.211121), new LatLng(55.715196, 13.211357), new LatLng(55.715299, 13.211585), new LatLng(55.71538, 13.21185), new LatLng(55.715421, 13.212169), new LatLng(55.715288, 13.212151), new LatLng(55.715035, 13.212179), new LatLng(55.714914, 13.212089), new LatLng(55.714914, 13.212089), new LatLng(55.714914, 13.212089)});
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationBuilder = new Notification.Builder(this);
         notificationBuilder.setContentTitle("Rundomizer");
