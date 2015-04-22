@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -64,5 +65,10 @@ public class RunningActivity extends Activity {
     protected void onDestroy(){
         super.onDestroy();
         stopService(locationServiceIntent);
+    }
+
+    public void startMap(View v){
+        Intent intent = new Intent(this, LocationActivity.class);
+        startActivity(intent);
     }
 }
