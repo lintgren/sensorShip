@@ -1,7 +1,6 @@
 # Förenkla sökningen av path för att förenkla beräkningarna och endast kontrollera de punkter som är närmast användaren för tillfället, antingen via vektoranalys, hashMap (med egen implementerad hashcode) eller matematisk statistik (avvikelse från path)
 Dela upp path-arrayen till flera olika listor där varje lista innehåller de punkter som gäller mellan de olika turnPoints-punkterna (de kan i sin tur delas upp i hashmaps)
 
-(#)  Göra om LocationActivity till en service så att den kan rulla i bakgrunden
-(Hagfjäll har implementerat detta, flytta ut kod från LocationActivity till LocationService)
-
 # Slumpa väg från något schysst API
+
+# skapa en (ev) thread som approximerar hastighet och när det är 10 sekunder kvar. Pga att gps inte uppdateras frekvent nog. Kanske genom att ta hänsyn till de 3-4 senaste locations och deras hastighet. 
