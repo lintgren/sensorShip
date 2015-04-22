@@ -37,7 +37,6 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private NotificationManager notificationManager;
     private Notification.Builder notificationBuilder;
     private boolean longNotified = false,shortNotified = false;
-
     private boolean isAllDone = true;
     private final Object lock = new Object();
 
@@ -52,8 +51,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     @Override
     public void onCreate() {
-        Log.d(TAG, "onCreate");
-        route = new Route();
+
         setupTTS();
         setupVibrator();
 
@@ -61,20 +59,28 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
                 .addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
         googleApiClient.connect();
 
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        Bundle extras = intent.getExtras();
+        Route route = (Route) extras.getSerializable("route");
+        if(route!=null){
+            this.route = route;
+        } else {
+            this.route = new Route();
+        }
+
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationBuilder = new Notification.Builder(this);
         notificationBuilder.setContentTitle("Rundomizer");
         notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
         notificationBuilder.setProgress(route.getPathSize(), 0, false);
+
         Intent notificationIntent = new Intent(this, LocationService.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         startForeground(NOTIFICATION_ID, notificationBuilder.build());
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand");
-
 
         return START_STICKY;
     }

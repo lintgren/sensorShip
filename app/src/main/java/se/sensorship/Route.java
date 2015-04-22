@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * Klass som tar hand om routen. Det är här all logik ligger.
  * Framtiden slumpa nya routes och så.
  */
-public class Route {
+public class Route implements Serializable {
     static List<LatLng> pointsToTurn = new ArrayList<LatLng>();
     private final String TAG = "Route";
     Polyline pathDirectionLine;
