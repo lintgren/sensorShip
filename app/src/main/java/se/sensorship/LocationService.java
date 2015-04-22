@@ -29,6 +29,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     public static final int NOTIFICATION_ID = 1;
 
     private final String TAG = "LocationService";
+    private final Object lock = new Object();
     private GoogleApiClient googleApiClient;
     private Route route;
     private boolean loadedTts;
@@ -37,9 +38,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private Location prevLocation;
     private NotificationManager notificationManager;
     private Notification.Builder notificationBuilder;
-    private boolean longNotified = false,shortNotified = false;
+    private boolean longNotified = false, shortNotified = false;
     private boolean isAllDone = true;
-    private final Object lock = new Object();
 
 
     public LocationService() {
@@ -67,10 +67,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
         Bundle extras = intent.getExtras();
 
-        route = new Route(new Direction[]{new Direction(55.713580, 13.211145, Direction.LEFT),
-                new Direction(55.713892, 13.209557, Direction.RIGHT), new Direction(55.714694,
-                13.210319, Direction.GOAL)}, new LatLng[]{new LatLng(55.705788, 13.211124),
-                new LatLng(55.705788, 13.211124)});
+        route = new Route(new Direction[]{new Direction(55.714916, 13.211974, Direction.STRAIGHT), new Direction(55.715079, 13.211094, Direction.RIGHT), new Direction(55.715396, 13.212231, Direction.LEFT)}, new LatLng[]{new LatLng(5.714879, 13.211993), new LatLng(5.714879, 13.211993), new LatLng(5.714927, 13.211742), new LatLng(5.714972, 13.21146), new LatLng(5.715019, 13.211201), new LatLng(5.715036, 13.211121), new LatLng(5.715196, 13.211357), new LatLng(5.715299, 13.211585), new LatLng(5.71538, 13.21185), new LatLng(5.715421, 13.212169), new LatLng(5.715288, 13.212151), new LatLng(5.715035, 13.212179), new LatLng(5.714914, 13.212089), new LatLng(5.714914, 13.212089), new LatLng(5.714914, 13.212089)});
+
 
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationBuilder = new Notification.Builder(this);
@@ -123,7 +121,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         long time = System.currentTimeMillis();
         route.updateLocation(location);
         boolean isOnTrack = route.isOnTrack();
-        if (!isOnTrack){
+        if (!isOnTrack) {
             Log.e(TAG, "NOT ON TRACK!");
             //TODO lämna meddelande till användaren?
         }
@@ -134,17 +132,17 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         Log.d(TAG, "distanceToNextDirection: " + route.distanceToNextDirectionPoint());
         prevLocation = location;
 
-        if (timeToTurn()<12){ //slightly higher than 10 seconds to get some time to say the message
+        if (timeToTurn() < 12) { //slightly higher than 10 seconds to get some time to say the message
             Direction direction = route.directionOnNextDirectionPoint();
             String turn = direction.getDirection();
-            if(!direction.isLongNotified()) {
+            if (!direction.isLongNotified()) {
                 longVibrate();
-                speak("turn "+turn+" in 10 seconds. Beep");
+                speak("turn " + turn + " in 10 seconds. Beep");
                 direction.setLongNotified();
             }
-            if(timeToTurn() < 3 && !direction.isShortnotified()) {
+            if (timeToTurn() < 3 && !direction.isShortnotified()) {
                 direction.setShortnotified();
-                speak("turn"+turn);
+                speak("turn" + turn);
                 if (turn.equals(Direction.LEFT)) {
                     vibrate(2);
                 } else if (turn.equals(Direction.RIGHT)) {
@@ -153,7 +151,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
                 Log.d(TAG, "TURN " + turn);
             }
-        }else{
+        } else {
             longNotified = false;
             shortNotified = false;
         }
@@ -170,29 +168,32 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
 
     private void speak(String text) {
-        if (!loadedTts){
+        if (!loadedTts) {
             return;
         }
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
-        }else{
+        } else {
             //noinspection deprecation
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
 
     }
-    private void vibrate(int numberOfVibrations){
-        detailedVibrate(numberOfVibrations,150);
+
+    private void vibrate(int numberOfVibrations) {
+        detailedVibrate(numberOfVibrations, 150);
     }
-    private void longVibrate(){
-        detailedVibrate(1,500);
+
+    private void longVibrate() {
+        detailedVibrate(1, 500);
     }
+
     private void detailedVibrate(int numberOfVibrations, int vibrateLength) {
         long[] pattern = new long[numberOfVibrations * 2];
-        for (int i = 0; i < pattern.length; i++){
-            if (i % 2 == 0){ // vibration
+        for (int i = 0; i < pattern.length; i++) {
+            if (i % 2 == 0) { // vibration
                 pattern[i] = vibrateLength;
-            }else{
+            } else {
                 pattern[i] = 300;
             }
 
@@ -201,7 +202,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     }
 
     private void setupTTS() {
-        if (tts != null){
+        if (tts != null) {
             Log.d("tts not null", "tts not null");
             return;
         }
@@ -209,10 +210,10 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS){
+                if (status == TextToSpeech.SUCCESS) {
                     loadedTts = true;
                     tts.setLanguage(Locale.CANADA);
-                }else{
+                } else {
                     loadedTts = false;
                 }
             }
@@ -225,15 +226,16 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     }
 
     private void closeTTS() {
-        if (tts != null){
+        if (tts != null) {
             tts.stop();
             tts.shutdown();
         }
     }
-    private double timeToTurn(){
+
+    private double timeToTurn() {
         double distance = route.distanceToNextDirectionPoint();
-        if(distance < 100){
-            return distance/prevLocation.getSpeed();
+        if (distance < 100) {
+            return distance / prevLocation.getSpeed();
         }
         return 1000;
     }
