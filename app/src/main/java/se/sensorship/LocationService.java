@@ -135,22 +135,23 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         prevLocation = location;
 
         if (timeToTurn()<12){ //slightly higher than 10 seconds to get some time to say the message
-            String direction = route.directionOnNextDirectionPoint();
-            if(!longNotified) {
+            Direction direction = route.directionOnNextDirectionPoint();
+            String turn = direction.getDirection();
+            if(!direction.isLongNotified()) {
                 longVibrate();
-                speak("turn "+direction+" in 10 seconds. Beep");
-                longNotified = true;
+                speak("turn "+turn+" in 10 seconds. Beep");
+                direction.setLongNotified();
             }
-            if(timeToTurn() < 3 && !shortNotified) {
-                shortNotified = true;
-                speak("turn"+direction);
-                if (direction.equals(Direction.LEFT)) {
+            if(timeToTurn() < 3 && !direction.isShortnotified()) {
+                direction.setShortnotified();
+                speak("turn"+turn);
+                if (turn.equals(Direction.LEFT)) {
                     vibrate(2);
-                } else if (direction.equals(Direction.RIGHT)) {
+                } else if (turn.equals(Direction.RIGHT)) {
                     vibrate(1);
                 }
 
-                Log.d(TAG, "TURN " + direction);
+                Log.d(TAG, "TURN " + turn);
             }
         }else{
             longNotified = false;

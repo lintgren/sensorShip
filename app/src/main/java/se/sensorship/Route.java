@@ -229,7 +229,7 @@ public class Route implements Serializable {
      * Servicen kanske ska få en notifiering när denna behöver anropas? isOnTrack kan hålla reda
      * på om förra punkten är passerad eller ej
      */
-    public String directionOnNextDirectionPoint() {
+    public Direction directionOnNextDirectionPoint() {
         int currentIndexOnPath = getClosestPointOnPathIndex();
         int directionPointIndex = 0;
         for (; directionPointIndex < turnDirectionOnPathIndex.size(); directionPointIndex++) {
@@ -237,7 +237,7 @@ public class Route implements Serializable {
                 break;
             }
         }
-        return directions[directionPointIndex].getDirection();
+        return directions[directionPointIndex];
     }
 
     public int getPathSize() {

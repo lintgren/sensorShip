@@ -12,6 +12,25 @@ public class Direction {
     public final static String RIGHT = "Right";
     public final static String STRAIGHT = "Straight";
     public final static String GOAL = "Finished";
+    private boolean longNotified = false;
+
+    public boolean isShortnotified() {
+        return shortnotified;
+    }
+
+    public void setShortnotified() {
+        shortnotified = true;
+    }
+
+    public boolean isLongNotified() {
+        return longNotified;
+    }
+
+    public void setLongNotified() {
+        longNotified = true;
+    }
+
+    private boolean shortnotified = false;
 
     public Direction(LatLng location, String direction){
         this.location = location;
@@ -28,7 +47,6 @@ public class Direction {
 
         return location;
     }
-
     public void setLocation(LatLng location) {
         this.location = location;
     }
