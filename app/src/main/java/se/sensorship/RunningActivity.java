@@ -1,29 +1,44 @@
 package se.sensorship;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
 public class RunningActivity extends Activity {
 
+    private Intent locationServiceIntent;
+    private int distance, duration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_running);
-        int distanceToRun = getIntent().getIntExtra("distance", -1);
-        int timeToRun = getIntent().getIntExtra("duration", -1);
-        Log.d("distance", Integer.toString(distanceToRun));
-        Log.d("duration", Integer.toString(timeToRun));
+        distance = getIntent().getIntExtra("distance", -1);
+        duration = getIntent().getIntExtra("duration", -1);
+        startLocationService();
     }
 
+    private void startLocationService() {
+        locationServiceIntent = new Intent(this, LocationService.class);
+        Bundle extras = new Bundle();
+        extras.putSerializable("route",randomizeRoute());
+        extras.putInt("distance",distance);
+        extras.putInt("duration",duration);
+        locationServiceIntent.putExtras(extras);
+        startService(locationServiceIntent);
+    }
+
+    private Route randomizeRoute(){
+        return new Route(new Direction[]{new Direction(55.713580, 13.211145, Direction.LEFT),
+                new Direction(55.713892, 13.209557, Direction.RIGHT), new Direction(55.714694,
+                13.210319, Direction.GOAL)},null);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_running, menu);
         return true;
     }
@@ -41,5 +56,11 @@ public class RunningActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        stopService(locationServiceIntent);
     }
 }

@@ -16,11 +16,6 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".SoundVibration"
@@ -34,8 +29,13 @@
             android:value="AIzaSyAZqdkjjgA4hNojokm4Ai-nQK52pQ07jgY" />
 
 
-        <activity android:name=".FragmentHolder"/>
+        <activity android:name=".FragmentHolder">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
 
+            <category android:name="android.intent.category.LAUNCHER" />
+         </intent-filter>
+        </activity>
         <service
             android:name=".LocationService"
             android:enabled="true"
