@@ -67,7 +67,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
         Bundle extras = intent.getExtras();
 
-        route = new Route(new Direction[]{new Direction(55.714916, 13.211974, Direction.RIGHT), new Direction(55.715079, 13.211094, Direction.RIGHT), new Direction(55.715396, 13.212231, Direction.LEFT)}, new LatLng[]{new LatLng(55.714879, 13.211993), new LatLng(55.714879, 13.211993), new LatLng(55.714927, 13.211742), new LatLng(55.714972, 13.21146), new LatLng(55.715019, 13.211201), new LatLng(55.715036, 13.211121), new LatLng(55.715196, 13.211357), new LatLng(55.715299, 13.211585), new LatLng(55.71538, 13.21185), new LatLng(55.715421, 13.212169), new LatLng(55.715288, 13.212151), new LatLng(55.715035, 13.212179), new LatLng(55.714914, 13.212089), new LatLng(55.714914, 13.212089), new LatLng(55.714914, 13.212089)});
+        route = new Route(new Direction[]{new Direction(55.715079, 13.211094, Direction.RIGHT)
+                , new Direction(55.715396, 13.212231, Direction.LEFT)}, new LatLng[]{new LatLng(55.714879, 13.211993), new LatLng(55.714879, 13.211993), new LatLng(55.714927, 13.211742), new LatLng(55.714972, 13.21146), new LatLng(55.715019, 13.211201), new LatLng(55.715036, 13.211121), new LatLng(55.715196, 13.211357), new LatLng(55.715299, 13.211585), new LatLng(55.71538, 13.21185), new LatLng(55.715421, 13.212169)});
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationBuilder = new Notification.Builder(this);
         notificationBuilder.setContentTitle("Rundomizer");
@@ -129,16 +130,17 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
         Log.d(TAG, "distanceToNextDirection: " + route.distanceToNextDirectionPoint());
         prevLocation = location;
-
-        if (timeToTurn() < 12) { //slightly higher than 10 seconds to get some time to say the message
+        double timeToTurn = timeToTurn();
+        Log.d(TAG,Double.toString(timeToTurn));
+        if (timeToTurn < 12) { //slightly higher than 10 seconds to get some time to say the message
             Direction direction = route.directionOnNextDirectionPoint();
             String turn = direction.getDirection();
             if (!direction.isLongNotified()) {
                 longVibrate();
-                speak("turn " + turn + " in 10 seconds. Beep");
+                speak("turn " + turn + " in "+Math.round(timeToTurn)+ " seconds.");
                 direction.setLongNotified();
             }
-            if (timeToTurn() < 3 && !direction.isShortnotified()) {
+            if (timeToTurn < 3 && !direction.isShortnotified()) {
                 direction.setShortnotified();
                 speak("turn" + turn);
                 if (turn.equals(Direction.LEFT)) {
@@ -233,6 +235,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private double timeToTurn() {
         double distance = route.distanceToNextDirectionPoint();
         if (distance < 100) {
+            Log.d(TAG,"speed: " + prevLocation.getSpeed());
             return distance / prevLocation.getSpeed();
         }
         return 1000;
