@@ -4,3 +4,5 @@ Dela upp path-arrayen till flera olika listor där varje lista innehåller de pu
 # Slumpa väg från något schysst API
 
 # skapa en (ev) thread som approximerar hastighet och när det är 10 sekunder kvar. Pga att gps inte uppdateras frekvent nog. Kanske genom att ta hänsyn till de 3-4 senaste locations och deras hastighet. 
+
+# For-sats på rad 237 bör ses över. Får outofbounce.
