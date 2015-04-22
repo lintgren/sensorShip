@@ -66,6 +66,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         Bundle extras = intent.getExtras();
+
         route = new Route(new Direction[]{new Direction(55.713580, 13.211145, Direction.LEFT),
                 new Direction(55.713892, 13.209557, Direction.RIGHT), new Direction(55.714694,
                 13.210319, Direction.GOAL)}, new LatLng[]{new LatLng(55.705788, 13.211124),

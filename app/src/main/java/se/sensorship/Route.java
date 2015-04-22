@@ -30,18 +30,18 @@ public class Route implements Serializable {
         this.directions = directions;
         this.path = path;
         int closestPointOnPathIndex = 0;
-        for (int turnIndex = 0; turnIndex < directions.length; turnIndex++){
+        for (int turnIndex = 0; turnIndex < directions.length; turnIndex++) {
             float closestPointOnPathToTurnDistance = Float.MAX_VALUE;
 
-            for (int pathIndex = closestPointOnPathIndex; pathIndex < path.length; pathIndex++){
+            for (int pathIndex = closestPointOnPathIndex; pathIndex < path.length; pathIndex++) {
                 if (closestPointOnPathToTurnDistance != Float.MAX_VALUE &&
-                        closestPointOnPathIndex + 10 < pathIndex){
+                        closestPointOnPathIndex + 10 < pathIndex) {
                     break;
                 }
                 Location pathPoint = convertLatLngToLocation(path[pathIndex]);
                 Location turnPoint = convertLatLngToLocation(directions[turnIndex].getLocation());
                 float distance = pathPoint.distanceTo(turnPoint);
-                if (distance <= closestPointOnPathToTurnDistance){
+                if (distance <= closestPointOnPathToTurnDistance) {
                     closestPointOnPathToTurnDistance = distance;
                     closestPointOnPathIndex = pathIndex;
                 }
@@ -51,6 +51,11 @@ public class Route implements Serializable {
         }
         Log.d(TAG, "point to turn: " + turnDirectionOnPathIndex.toString());
 
+    }
+
+    public Route(String place) {
+        this(new Direction[]{new Direction(55.703503700000006, 13.2191062, Direction.LEFT)}, new LatLng[]{new LatLng(5.714879, 13.211993), new LatLng(5.714879, 13.211993), new LatLng(5.714927, 13.211742), new LatLng(5.714972, 13.21146), new LatLng(5.715019, 13.211201), new LatLng(5.715036, 13.211121), new LatLng(5.715196, 13.211357), new LatLng(5.715299, 13.211585), new LatLng(5.71538, 13.21185), new LatLng(5.715421, 13.212169), new LatLng(5.715288, 13.212151), new LatLng(5.715035, 13.212179), new LatLng(5.714914, 13.212089), new LatLng(5.714914, 13.212089), new LatLng(5.714914, 13.212089)
+        });
     }
 
     public Route() {
@@ -178,10 +183,10 @@ public class Route implements Serializable {
     private void updateClosestPointOnPathIndex() {
         closestPointOnPathIndex = 0;
         float distanceToTrack = Float.MAX_VALUE;
-        for (int pathIndex = 0; pathIndex < path.length; pathIndex++){
+        for (int pathIndex = 0; pathIndex < path.length; pathIndex++) {
             LatLng pointOnPath = path[pathIndex];
             float distance = currentLocation.distanceTo(convertLatLngToLocation(pointOnPath));
-            if (distance < distanceToTrack){
+            if (distance < distanceToTrack) {
                 distanceToTrack = distance;
                 closestPointOnPathIndex = pathIndex;
             }
@@ -203,14 +208,14 @@ public class Route implements Serializable {
     public double distanceToNextDirectionPoint() {
         int currentIndexOnPath = getClosestPointOnPathIndex();
         int directionPointOnPathIndex = 0;
-        for (Integer i : turnDirectionOnPathIndex){
-            if (i > currentIndexOnPath){
+        for (Integer i : turnDirectionOnPathIndex) {
+            if (i > currentIndexOnPath) {
                 directionPointOnPathIndex = i;
                 break;
             }
         }
         float distance = 0;
-        for (int i = currentIndexOnPath; i < directionPointOnPathIndex; i++){
+        for (int i = currentIndexOnPath; i < directionPointOnPathIndex; i++) {
             distance += convertLatLngToLocation(path[i]).distanceTo(convertLatLngToLocation
                     (path[i + 1]));
         }
@@ -227,8 +232,8 @@ public class Route implements Serializable {
     public String directionOnNextDirectionPoint() {
         int currentIndexOnPath = getClosestPointOnPathIndex();
         int directionPointIndex = 0;
-        for (; directionPointIndex < turnDirectionOnPathIndex.size(); directionPointIndex++){
-            if (turnDirectionOnPathIndex.get(directionPointIndex) > currentIndexOnPath){
+        for (; directionPointIndex < turnDirectionOnPathIndex.size(); directionPointIndex++) {
+            if (turnDirectionOnPathIndex.get(directionPointIndex) > currentIndexOnPath) {
                 break;
             }
         }
@@ -254,7 +259,7 @@ public class Route implements Serializable {
     public float getElapsedDistance() {
         int currentIndexOnPath = getClosestPointOnPathIndex();
         float distance = 0;
-        for (int i = 0; i < currentIndexOnPath; i++){
+        for (int i = 0; i < currentIndexOnPath; i++) {
             distance += convertLatLngToLocation(path[i]).distanceTo(convertLatLngToLocation
                     (path[i + 1]));
         }
