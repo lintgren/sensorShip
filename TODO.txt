@@ -4,6 +4,4 @@ Dela upp path-arrayen till flera olika listor där varje lista innehåller de pu
 (#)  Göra om LocationActivity till en service så att den kan rulla i bakgrunden
 (Hagfjäll har implementerat detta, flytta ut kod från LocationActivity till LocationService)
 
-# Motivationskartan ska finnas i GUI (fake) tills tid finns för att göra något på riktigt :)
-
 # Slumpa väg från något schysst API

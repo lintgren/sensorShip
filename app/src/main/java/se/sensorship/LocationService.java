@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -21,7 +20,6 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-import java.util.Date;
 import java.util.Locale;
 
 public class LocationService extends Service implements GoogleApiClient.ConnectionCallbacks,
@@ -38,6 +36,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private Location prevLocation;
     private NotificationManager notificationManager;
     private Notification.Builder notificationBuilder;
+    private boolean longNotified = false,shortNotified = false;
 
     private boolean isAllDone = true;
     private final Object lock = new Object();
@@ -128,15 +127,28 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
         Log.d(TAG, "distanceToNextDirection: " + route.distanceToNextDirectionPoint());
         prevLocation = location;
-        if (route.distanceToNextDirectionPoint() < 50){
+
+        if (timeToTurn()<12){ //slightly higher than 10 seconds to get some time to say the message
             String direction = route.directionOnNextDirectionPoint();
-            speak(direction);
-            Log.d(TAG, "TURN " + direction);
-            if (direction.equals(Direction.LEFT)){
-                vibrate(2);
-            }else if (direction.equals(Direction.RIGHT)){
-                vibrate(1);
+            if(!longNotified) {
+                longVibrate();
+                speak("turn "+direction+" in 10 seconds. Beep");
+                longNotified = true;
             }
+            if(timeToTurn() < 3 && !shortNotified) {
+                shortNotified = true;
+                speak("turn"+direction);
+                if (direction.equals(Direction.LEFT)) {
+                    vibrate(2);
+                } else if (direction.equals(Direction.RIGHT)) {
+                    vibrate(1);
+                }
+
+                Log.d(TAG, "TURN " + direction);
+            }
+        }else{
+            longNotified = false;
+            shortNotified = false;
         }
     }
 
@@ -162,12 +174,17 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         }
 
     }
-
-    private void vibrate(int numberOfVibrations) {
+    private void vibrate(int numberOfVibrations){
+        detailedVibrate(numberOfVibrations,150);
+    }
+    private void longVibrate(){
+        detailedVibrate(1,500);
+    }
+    private void detailedVibrate(int numberOfVibrations, int vibrateLength) {
         long[] pattern = new long[numberOfVibrations * 2];
         for (int i = 0; i < pattern.length; i++){
             if (i % 2 == 0){ // vibration
-                pattern[i] = 150;
+                pattern[i] = vibrateLength;
             }else{
                 pattern[i] = 300;
             }
@@ -205,5 +222,12 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
             tts.stop();
             tts.shutdown();
         }
+    }
+    private double timeToTurn(){
+        double distance = route.distanceToNextDirectionPoint();
+        if(distance < 100){
+            return distance/prevLocation.getSpeed();
+        }
+        return 1000;
     }
 }

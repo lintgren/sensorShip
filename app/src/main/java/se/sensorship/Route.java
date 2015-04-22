@@ -54,7 +54,7 @@ public class Route {
 
     public Route() {
         this(new Direction[]{new Direction(55.703503700000006, 13.2191062, Direction.LEFT),
-                new Direction(55.7090651, 13.2399845, Direction.RIGHT), new Direction(55.704446,
+                new Direction(55.7090651, 13.2399845, Direction.LEFT), new Direction(55.704446,
                 13.214137, Direction.GOAL)}, new LatLng[]{new LatLng(55.705788, 13.211124),
                 new LatLng(55.705788, 13.211124), new LatLng(55.705679, 13.211462),
                 new LatLng(55.705466, 13.211608), new LatLng(55.705288, 13.21184),
