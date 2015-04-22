@@ -44,6 +44,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
         rundomizerButton.setOnClickListener(this);
         distanceButton.setOnClickListener(this);
         durationButton.setOnClickListener(this);
+        distanceButton.setChecked(true);
 
         durationPickerLayout = (RelativeLayout) v.findViewById(R.id.duration_picker_layout);
         distancePickerLayout = (RelativeLayout) v.findViewById(R.id.distance_picker_layout);
@@ -55,6 +56,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
         distanceButton.setBackgroundColor(getResources().getColor(R.color.button_material_dark));
         durationButton.setBackgroundColor(getResources().getColor(R.color.button_material_light));
         durationButton.setChecked(false);
+        distanceButton.setChecked(true);
         durationPickerLayout.setVisibility(View.INVISIBLE);
         distancePickerLayout.setVisibility(View.VISIBLE);
     }
@@ -63,6 +65,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
         durationButton.setBackgroundColor(getResources().getColor(R.color.button_material_dark));
         distanceButton.setBackgroundColor(getResources().getColor(R.color.button_material_light));
         distanceButton.setChecked(false);
+        durationButton.setChecked(true);
 
         durationPickerLayout.setVisibility(View.VISIBLE);
         distancePickerLayout.setVisibility(View.INVISIBLE);
