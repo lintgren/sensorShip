@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.maps.model.LatLng;
+
 
 public class RunningActivity extends Activity {
 
@@ -24,7 +26,6 @@ public class RunningActivity extends Activity {
     private void startLocationService() {
         locationServiceIntent = new Intent(this, LocationService.class);
         Bundle extras = new Bundle();
-        extras.putSerializable("route",randomizeRoute());
         extras.putInt("distance",distance);
         extras.putInt("duration",duration);
         locationServiceIntent.putExtras(extras);
@@ -34,7 +35,8 @@ public class RunningActivity extends Activity {
     private Route randomizeRoute(){
         return new Route(new Direction[]{new Direction(55.713580, 13.211145, Direction.LEFT),
                 new Direction(55.713892, 13.209557, Direction.RIGHT), new Direction(55.714694,
-                13.210319, Direction.GOAL)},null);
+                13.210319, Direction.GOAL)}, new LatLng[]{new LatLng(55.705788, 13.211124),
+                new LatLng(55.705788, 13.211124)});
     }
 
     @Override
