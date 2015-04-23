@@ -3,11 +3,11 @@ package se.sensorship;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.ToggleButton;
@@ -18,6 +18,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
     private ToggleButton distanceButton, durationButton;
     private RelativeLayout durationPickerLayout, distancePickerLayout;
     private NumberPicker minutesPicker, hoursPicker, distancePicker;
+    private Boolean audio, vibration;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -102,5 +103,23 @@ public class StartFragment extends Fragment implements View.OnClickListener {
 
     private int getDistance() {
         return distancePicker.getValue();
+    }
+
+    public void onCheckboxClicked(View view) {
+        boolean checked = ((CheckBox) view).isChecked();
+        switch (view.getId()) {
+            case R.id.checkbox_audio:
+                if (checked)
+                    audio = true;
+                else
+                    audio = false;
+                break;
+            case R.id.checkbox_vibration:
+                if (checked)
+                    vibration = true;
+                else
+                    vibration = false;
+                break;
+        }
     }
 }
