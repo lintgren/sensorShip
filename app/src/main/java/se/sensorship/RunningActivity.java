@@ -1,5 +1,6 @@
 package se.sensorship;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,13 +21,18 @@ public class RunningActivity extends Activity {
         distance = getIntent().getIntExtra("distance", -1);
         duration = getIntent().getIntExtra("duration", -1);
         startLocationService();
+        final ActionBar actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
     }
+
 
     private void startLocationService() {
         locationServiceIntent = new Intent(this, LocationService.class);
         Bundle extras = new Bundle();
-        extras.putInt("distance",distance);
-        extras.putInt("duration",duration);
+        extras.putInt("distance", distance);
+        extras.putInt("duration", duration);
         locationServiceIntent.putExtras(extras);
         startService(locationServiceIntent);
     }
@@ -46,7 +52,7 @@ public class RunningActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings){
             return true;
         }
 
@@ -54,16 +60,16 @@ public class RunningActivity extends Activity {
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
     }
 
-    public void startMap(View v){
+    public void startMap(View v) {
         Intent intent = new Intent(this, LocationActivity.class);
         startActivity(intent);
     }
 
-    public void killService(View v){
+    public void killService(View v) {
         stopService(locationServiceIntent);
     }
 }

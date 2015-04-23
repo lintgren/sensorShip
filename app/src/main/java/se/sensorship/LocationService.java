@@ -74,6 +74,9 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Bundle extras = intent.getExtras();
+        Log.d(TAG, Integer.toString(extras.getInt("distance", -1)));
+
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationBuilder = new Notification.Builder(this);
         notificationBuilder.setContentTitle("Rundomizer");

@@ -44,11 +44,11 @@ public class StartFragment extends Fragment implements View.OnClickListener {
         rundomizerButton.setOnClickListener(this);
         distanceButton.setOnClickListener(this);
         durationButton.setOnClickListener(this);
-        distanceButton.setChecked(true);
 
         durationPickerLayout = (RelativeLayout) v.findViewById(R.id.duration_picker_layout);
         distancePickerLayout = (RelativeLayout) v.findViewById(R.id.distance_picker_layout);
 
+        distanceButtonClicked();
         return v;
     }
 
@@ -82,7 +82,6 @@ public class StartFragment extends Fragment implements View.OnClickListener {
                 durationButtonClicked();
                 break;
             case (R.id.rundomize_button):
-                Log.d("Häär", "hit");
                 Intent intent = new Intent(getActivity(), RunningActivity.class);
                 if (durationButton.isChecked()) {
                     int duration = getTime();
