@@ -16,14 +16,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+
 /**
  * Created by Andy on 15-04-14.
  */
 public class FragmentHolder extends FragmentActivity {
 
 
-    DemoCollectionPagerAdapter mDemoCollectionPagerAdapter;
-    ViewPager mViewPager;
+    private DemoCollectionPagerAdapter mDemoCollectionPagerAdapter;
+    private ViewPager mViewPager;
+    private GoogleApiClient googleApiClient;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -28,9 +28,9 @@ public class TimeToTurnThread extends Thread {
 
     @Override
     public void run() {
-        Direction direction = route.directionOnNextDirectionPoint();
-        while(!direction.getDirection().equals(Direction.GOAL)){
-            direction = route.directionOnNextDirectionPoint();
+        Direction direction = route.nextDirection();
+        while (!direction.getDirection().equals(Direction.GOAL)){
+            direction = route.nextDirection();
             Log.d(TAG, "TimeToTurn: " + timeToTurn);
             try{
                 long sleepTime;
@@ -43,13 +43,27 @@ public class TimeToTurnThread extends Thread {
                     sleep(sleepTime);
                 }
                 locationService.notifyUser();
-                Log.d(TAG, "We have waited " + sleepTime + " sec");
+                Log.d(TAG, "We have waited " + sleepTime/1000 + " sec");
                 sleep(Long.MAX_VALUE);
             }catch (InterruptedException e){
-                Log.d(TAG, "INTERRUPTED!");
-
             }
         }
+        while (direction.getDirection().equals(Direction.GOAL)){
+            try{
+                long sleepTime;
+                if (direction.isLongNotified()){
+                    sleepTime = (long) ((timeToTurn - Direction.SHORT_ALERT_TIME) * 1000);
+                }else{
+                    sleepTime = (long) ((timeToTurn - Direction.LONG_ALERT_TIME) * 1000);
+                }
+                if (sleepTime > 0){
+                    sleep(sleepTime);
+                }
+            }catch (InterruptedException e){
+            }
+        }
+        locationService.notifyUserFinishedRound();
+        Log.d(TAG, "Route finished!");
     }
 
     public void updateLocation(Location location) {
@@ -62,8 +76,7 @@ public class TimeToTurnThread extends Thread {
 
 
     private void calculateSpeed() {
-        if (!oldLocationsIsFilled && locationHead == 0)
-            oldLocationsIsFilled = true;
+        if (!oldLocationsIsFilled && locationHead == 0) oldLocationsIsFilled = true;
         //Calculates mean speed
         if (oldLocationsIsFilled){
             calculatedSpeed = 0;
@@ -81,7 +94,7 @@ public class TimeToTurnThread extends Thread {
             calculatedSpeed /= oldLocations.length - 1;
         }else{
             int i = locationHead - 1 + oldLocations.length;
-            calculatedSpeed = oldLocations[i% oldLocations.length].getSpeed();
+            calculatedSpeed = oldLocations[i % oldLocations.length].getSpeed();
         }
     }
 

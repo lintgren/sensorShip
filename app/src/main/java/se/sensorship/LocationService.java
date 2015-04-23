@@ -44,7 +44,6 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private boolean threadIsStarted = false;
 
 
-
     public LocationService() {
     }
 
@@ -75,8 +74,6 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle extras = intent.getExtras();
-        Log.d(TAG, Integer.toString(extras.getInt("distance", -1)));
-
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationBuilder = new Notification.Builder(this);
         notificationBuilder.setContentTitle("Rundomizer");
@@ -92,10 +89,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "onDestroy");
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
         closeTTS();
-        Log.d("tts Destroy", "tts Destroy");
         super.onDestroy();
     }
 
@@ -135,7 +130,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
             //TODO lämna meddelande till användaren?
         }
         int progress = route.getClosestPointOnPathIndex();
-        float elapsedDistance = route.getElapsedDistance();
+        float elapsedDistance = route.getElapsedDistanceOnPath();
         updateNotification(progress, elapsedDistance);
 
         Log.d(TAG, "distanceToNextDirection: " + route.distanceToNextDirectionPoint());
@@ -149,9 +144,9 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
 
     private void updateNotification(int currentPositionInPathIndex, float distanceInMeter) {
-        float distanceInKm = distanceInMeter / 1000;
+        double distanceInKm = route.getElapsedDistance() / 1000;
         notificationBuilder.setProgress(route.getPathSize(), currentPositionInPathIndex, false);
-        notificationBuilder.setContentText("Distance: " + String.format("%.1f", distanceInKm) +
+        notificationBuilder.setContentText("Distance: " + String.format("%.2d", distanceInKm) +
                 "km");
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
     }
@@ -240,7 +235,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     }
 
     public void notifyUser() {
-        Direction direction = route.directionOnNextDirectionPoint();
+        Direction direction = route.nextDirection();
         if (!direction.isLongNotified()){
             longVibrate();
             speak("turn " + direction.getDirection() + " in " + Direction.LONG_ALERT_TIME + " " +
@@ -250,5 +245,10 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
             speak("Turn " + direction.getDirection());
             vibrate(direction);
         }
+    }
+
+    public void notifyUserFinishedRound() {
+        longVibrate();
+        speak("Well done! You ran " + route.getElapsedDistance() + " kilometers in ");
     }
 }

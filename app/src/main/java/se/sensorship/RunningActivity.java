@@ -21,10 +21,7 @@ public class RunningActivity extends Activity {
         distance = getIntent().getIntExtra("distance", -1);
         duration = getIntent().getIntExtra("duration", -1);
         startLocationService();
-        final ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayShowTitleEnabled(false);
+        getActionBar().hide();
     }
 
 
