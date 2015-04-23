@@ -6,12 +6,13 @@ import com.google.android.gms.maps.model.LatLng;
  * Created by Andy on 15-04-16.
  */
 public class Direction {
-    private com.google.android.gms.maps.model.LatLng location;
-    private String direction;
     public final static String LEFT = "Left";
     public final static String RIGHT = "Right";
     public final static String STRAIGHT = "Straight";
     public final static String GOAL = "Finished";
+    public static final int LONG_ALERT_TIME = 10, SHORT_ALERT_TIME = 3;
+    private com.google.android.gms.maps.model.LatLng location;
+    private String direction;
     private boolean longNotified = false;
 
     public boolean isShortnotified() {
