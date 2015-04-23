@@ -26,10 +26,8 @@ import java.util.Locale;
 public class LocationService extends Service implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    private static final int LEFT_VIBRATE = 1, RIGHT_VIBRATE = 2;
-
     public static final int NOTIFICATION_ID = 1;
-
+    private static final int LEFT_VIBRATE = 1, RIGHT_VIBRATE = 2;
     private final String TAG = "LocationService";
     private final Object lock = new Object();
     private GoogleApiClient googleApiClient;
@@ -42,6 +40,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private Notification.Builder notificationBuilder;
     private TimeToTurnThread timeToTurnThread;
     private boolean threadIsStarted = false;
+    private boolean audio, vibration;
 
 
     public LocationService() {
@@ -74,6 +73,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle extras = intent.getExtras();
+        audio = extras.getBoolean("audio");
+        vibration = extras.getBoolean("vibration");
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationBuilder = new Notification.Builder(this);
         notificationBuilder.setContentTitle("Rundomizer");
@@ -117,7 +118,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "Accuracy: " + location.getAccuracy());
-        if (location.getAccuracy() < 7){
+        if (location.getAccuracy() < 7) {
             onLocationChangedSynchronized(location);
         }
     }
@@ -125,7 +126,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private synchronized void onLocationChangedSynchronized(Location location) {
         route.updateLocation(location);
         boolean isOnTrack = route.isOnTrack();
-        if (!isOnTrack){
+        if (!isOnTrack) {
             Log.e(TAG, "NOT ON TRACK!");
             //TODO lämna meddelande till användaren?
         }
@@ -135,7 +136,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
         Log.d(TAG, "distanceToNextDirection: " + route.distanceToNextDirectionPoint());
         timeToTurnThread.updateLocation(location);
-        if (!threadIsStarted){
+        if (!threadIsStarted) {
             timeToTurnThread.start();
             threadIsStarted = true;
         }
@@ -152,12 +153,12 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     }
 
     private void speak(String text) {
-        if (!loadedTts){
+        if (!loadedTts) {
             return;
         }
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
-        }else{
+        } else {
             //noinspection deprecation
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
@@ -169,9 +170,9 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     }
 
     private void vibrate(Direction direction) {
-        if (direction.getDirection().equals(Direction.LEFT)){
+        if (direction.getDirection().equals(Direction.LEFT)) {
             vibrate(LEFT_VIBRATE);
-        }else if (direction.getDirection().equals(Direction.RIGHT)){
+        } else if (direction.getDirection().equals(Direction.RIGHT)) {
             vibrate(RIGHT_VIBRATE);
         }
 
@@ -183,10 +184,10 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     private void detailedVibrate(int numberOfVibrations, int vibrateLength) {
         long[] pattern = new long[numberOfVibrations * 2];
-        for (int i = 0; i < pattern.length; i++){
-            if (i % 2 == 0){ // vibration
+        for (int i = 0; i < pattern.length; i++) {
+            if (i % 2 == 0) { // vibration
                 pattern[i] = vibrateLength;
-            }else{
+            } else {
                 pattern[i] = 300;
             }
 
@@ -195,7 +196,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     }
 
     private void setupTTS() {
-        if (tts != null){
+        if (tts != null) {
             Log.e("tts not null", "tts not null");
             return;
         }
@@ -203,10 +204,10 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS){
+                if (status == TextToSpeech.SUCCESS) {
                     loadedTts = true;
                     tts.setLanguage(Locale.CANADA);
-                }else{
+                } else {
                     loadedTts = false;
                 }
             }
@@ -219,7 +220,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     }
 
     private void closeTTS() {
-        if (tts != null){
+        if (tts != null) {
             tts.stop();
             tts.shutdown();
         }
@@ -227,7 +228,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     private double timeToTurn() {
         double distance = route.distanceToNextDirectionPoint();
-        if (distance < 100){
+        if (distance < 100) {
             Log.d(TAG, "speed: " + prevLocation.getSpeed());
             return distance / prevLocation.getSpeed();
         }
@@ -236,14 +237,22 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     public void notifyUser() {
         Direction direction = route.nextDirection();
-        if (!direction.isLongNotified()){
-            longVibrate();
-            speak("turn " + direction.getDirection() + " in " + Direction.LONG_ALERT_TIME + " " +
-                    "seconds.");
+        if (!direction.isLongNotified()) {
+            if (vibration) {
+                longVibrate();
+            }
+            if (audio) {
+                speak("turn " + direction.getDirection() + " in " + Direction.LONG_ALERT_TIME + " " +
+                        "seconds.");
+            }
             direction.setLongNotified();
-        }else{
-            speak("Turn " + direction.getDirection());
-            vibrate(direction);
+        } else {
+            if (vibration) {
+                vibrate(direction);
+            }
+            if (audio) {
+                speak("Turn " + direction.getDirection());
+            }
         }
     }
 

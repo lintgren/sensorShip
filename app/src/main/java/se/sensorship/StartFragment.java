@@ -18,7 +18,8 @@ public class StartFragment extends Fragment implements View.OnClickListener {
     private ToggleButton distanceButton, durationButton;
     private RelativeLayout durationPickerLayout, distancePickerLayout;
     private NumberPicker minutesPicker, hoursPicker, distancePicker;
-    private Boolean audio, vibration;
+    private Boolean audio = true;
+    private Boolean vibration = true;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -92,6 +93,8 @@ public class StartFragment extends Fragment implements View.OnClickListener {
                     int distance = getDistance();
                     intent.putExtra("distance", distance);
                 }
+                intent.putExtra("vibration", vibration);
+                intent.putExtra("audio", audio);
                 startActivity(intent);
                 break;
         }

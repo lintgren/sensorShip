@@ -1,6 +1,5 @@
 package se.sensorship;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,13 +12,17 @@ public class RunningActivity extends Activity {
 
     private Intent locationServiceIntent;
     private int distance, duration;
+    private Boolean audio, vibration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_running);
-        distance = getIntent().getIntExtra("distance", -1);
-        duration = getIntent().getIntExtra("duration", -1);
+        Intent intent = getIntent();
+        distance = intent.getIntExtra("distance", -1);
+        duration = intent.getIntExtra("duration", -1);
+        vibration = intent.getBooleanExtra("vibration", true);
+        audio = intent.getBooleanExtra("audio", true);
         startLocationService();
         getActionBar().hide();
     }
@@ -30,6 +33,8 @@ public class RunningActivity extends Activity {
         Bundle extras = new Bundle();
         extras.putInt("distance", distance);
         extras.putInt("duration", duration);
+        extras.putBoolean("audio", audio);
+        extras.putBoolean("vibration", vibration);
         locationServiceIntent.putExtras(extras);
         startService(locationServiceIntent);
     }
