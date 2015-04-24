@@ -17,8 +17,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 
 /**
  * Created by Andy on 15-04-14.
@@ -28,7 +26,6 @@ public class FragmentHolder extends FragmentActivity {
 
     private DemoCollectionPagerAdapter mDemoCollectionPagerAdapter;
     private ViewPager mViewPager;
-    private GoogleApiClient googleApiClient;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -138,8 +135,6 @@ public class FragmentHolder extends FragmentActivity {
             // properly.
             View rootView = inflater.inflate(
                     R.layout.fragment_history, container, false);
-            Bundle args = getArguments();
-
             spinner = (Spinner) rootView.findViewById(R.id.prev_runs);
             lap = getResources().getStringArray(R.array.prev_runs);
             map = (ImageView) rootView.findViewById(R.id.ivMap);

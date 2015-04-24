@@ -2,7 +2,6 @@ package se.sensorship;
 
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -29,13 +28,11 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     public static final int NOTIFICATION_ID = 1;
     private static final int LEFT_VIBRATE = 1, RIGHT_VIBRATE = 2;
     private final String TAG = "LocationService";
-    private final Object lock = new Object();
     private GoogleApiClient googleApiClient;
     private Route route;
     private boolean loadedTts;
     private TextToSpeech tts;
     private Vibrator vibrator;
-    private Location prevLocation;
     private NotificationManager notificationManager;
     private Notification.Builder notificationBuilder;
     private TimeToTurnThread timeToTurnThread;
@@ -80,11 +77,10 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationBuilder = new Notification.Builder(this);
         notificationBuilder.setContentTitle("Rundomizer");
+        notificationBuilder.setContentText("Distance: 0.0km");
         notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
         notificationBuilder.setProgress(route.getPathSize(), 0, false);
 
-        Intent notificationIntent = new Intent(this, LocationService.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         startForeground(NOTIFICATION_ID, notificationBuilder.build());
 
         return START_STICKY;
@@ -133,8 +129,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
             //TODO lämna meddelande till användaren?
         }
         int progress = route.getClosestPointOnPathIndex();
-        float elapsedDistance = route.getElapsedDistanceOnPath();
-        updateNotification(progress, elapsedDistance);
+        updateNotification(progress);
 
         Log.d(TAG, "distanceToNextDirection: " + route.distanceToNextDirectionPoint());
         timeToTurnThread.updateLocation(location);
@@ -142,11 +137,10 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
             timeToTurnThread.start();
             threadIsStarted = true;
         }
-        prevLocation = location;
     }
 
 
-    private void updateNotification(int currentPositionInPathIndex, float distanceInMeter) {
+    private void updateNotification(int currentPositionInPathIndex) {
         double distanceInKm = route.getElapsedDistance() / 1000;
         notificationBuilder.setProgress(route.getPathSize(), currentPositionInPathIndex, false);
         notificationBuilder.setContentText("Distance: " + String.format("%.2d", distanceInKm) +

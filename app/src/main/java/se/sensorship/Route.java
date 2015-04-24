@@ -4,7 +4,6 @@ import android.location.Location;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polyline;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import java.util.List;
  */
 public class Route implements Serializable {
     //TODO remove the fist two attributes, only used for the map
-    static List<LatLng> pointsToTurn = new ArrayList<LatLng>();
+    static List<LatLng> pointsToTurn = new ArrayList<>();
     static LatLng[] static_path;
     private final String TAG = "Route";
     private LatLng[] path;
@@ -140,16 +139,6 @@ public class Route implements Serializable {
         ret.setLatitude(source.latitude);
         ret.setLongitude(source.longitude);
         return ret;
-    }
-
-    public float getElapsedDistanceOnPath() {
-        int currentIndexOnPath = getClosestPointOnPathIndex();
-        float distance = 0;
-        for (int i = 0; i < currentIndexOnPath; i++){
-            distance += convertLatLngToLocation(path[i]).distanceTo(convertLatLngToLocation
-                    (path[i + 1]));
-        }
-        return distance;
     }
 
     public double getElapsedDistance() {
