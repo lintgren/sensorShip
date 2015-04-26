@@ -119,7 +119,7 @@ public class Route implements Serializable {
         int currentIndexOnPath = getClosestPointOnPathIndex();
         int directionPointIndex = 0;
         for (; directionPointIndex < turnDirectionOnPathIndex.size(); directionPointIndex++){
-            if (turnDirectionOnPathIndex.get(directionPointIndex) > currentIndexOnPath){
+            if (turnDirectionOnPathIndex.get(directionPointIndex) >= currentIndexOnPath){
                 break;
             }
         }
