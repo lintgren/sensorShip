@@ -126,10 +126,12 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         boolean isOnTrack = route.isOnTrack();
         if (!isOnTrack){
             Log.e(TAG, "NOT ON TRACK!");
-            //TODO lämna meddelande till användaren?
+            boolean oldValue = useAudio;
+            useAudio = true;
+            speak("You are not on track");
+            useAudio = oldValue;
         }
-        int progress = route.getClosestPointOnPathIndex();
-        updateNotification(progress);
+        updateNotification(route.getClosestPointOnPathIndex());
 
         Log.d(TAG, "distanceToNextDirection: " + route.distanceToNextDirectionPoint());
         timeToTurnThread.updateLocation(location);
