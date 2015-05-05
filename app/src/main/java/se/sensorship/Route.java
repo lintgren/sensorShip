@@ -20,7 +20,7 @@ public class Route implements Serializable {
     static LatLng[] static_path;
     private final String TAG = "Route";
     private LatLng[] path;
-    private Direction[] directions;
+    static Direction[] directions;
     private List<Integer> turnDirectionOnPathIndex = new ArrayList<>();
 
     private Location currentLocation;

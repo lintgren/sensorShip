@@ -21,8 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:text="Sound"
-            android:checked="true"
-            android:onClick="onCheckboxClicked" />
+            android:checked="true" />
 
         <CheckBox
             android:id="@+id/checkbox_vibration"
@@ -30,8 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:text="Vibration"
-            android:checked="true"
-            android:onClick="onCheckboxClicked" />
+            android:checked="true" />
 
 
     </RelativeLayout>

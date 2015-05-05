@@ -61,10 +61,6 @@ public class RunningActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 
     public void startMap(View v) {
         Intent intent = new Intent(this, LocationActivity.class);

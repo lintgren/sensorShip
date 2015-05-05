@@ -18,7 +18,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Locale;
 
@@ -53,14 +52,12 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         googleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
         googleApiClient.connect();
-        route = new Route(new Direction[]{new Direction(55.715079, 13.211094, Direction.RIGHT),
-                new Direction(55.715396, 13.212231, Direction.GOAL),},
-                new LatLng[]{new LatLng(55.714879, 13.211993), new LatLng(55.714879, 13.211993),
-                        new LatLng(55.714927, 13.211742), new LatLng(55.714972, 13.21146),
-                        new LatLng(55.715019, 13.211201), new LatLng(55.715036, 13.211121),
-                        new LatLng(55.715196, 13.211357), new LatLng(55.715299, 13.211585),
-                        new LatLng(55.71538, 13.21185), new LatLng(55.715421, 13.212169)});
+        route = new Route(Route.directions, Route.static_path);
         timeToTurnThread = new TimeToTurnThread(this, route);
+    }
+
+    public Route getRoute() {
+        return route;
     }
 
     @Override
