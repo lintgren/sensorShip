@@ -110,7 +110,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
 
     public void onCheckboxClicked(View view) {
         boolean checked = ((CheckBox) view).isChecked();
-        switch (view.getId()) {
+        /*switch (view.getId()) {
             case R.id.checkbox_audio:
                 if (checked)
                     audio = true;
@@ -123,6 +123,6 @@ public class StartFragment extends Fragment implements View.OnClickListener {
                 else
                     vibration = false;
                 break;
-        }
+        }*/
     }
 }

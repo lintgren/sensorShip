@@ -54,10 +54,10 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
         if (audio) {
             AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
             if (!am.isWiredHeadsetOn()) {
-                Toast.makeText(this, "Plug your headphones in your face", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Plug your headphones in your face", Toast.LENGTH_LONG).show();
             } else {
                 //favourite code line
-                Toast.makeText(this, "Fuck you, you well prepared biatch", Toast.LENGTH_SHORT).cancel();
+                Toast.makeText(this, "Fuck you, you well prepared biatch", Toast.LENGTH_LONG).cancel();
             }
         }
 
