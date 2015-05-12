@@ -6,43 +6,24 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/checkbox_layout"
-        android:layout_alignParentTop="true"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp">
-
-        <CheckBox
-            android:id="@+id/checkbox_audio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:text="Ljud"
-            android:checked="true"
-            android:onClick="onCheckboxClicked" />
-
-        <CheckBox
-            android:id="@+id/checkbox_vibration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="Vibration"
-            android:checked="true"
-            android:onClick="onCheckboxClicked" />
-
-
-    </RelativeLayout>
-
 
     <RelativeLayout
-        android:layout_below="@id/checkbox_layout"
         android:id="@+id/buttons_layout"
+        android:layout_marginTop="50dp"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true">
+
+        <Switch
+            android:id="@+id/distance_duration_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:textOff="Distance"
+            android:textOn="Duration"
+            android:thumb="@drawable/thumb_style"
+            android:track="@drawable/switch_style" />
 
         <ToggleButton
             android:id="@+id/distance_button"
@@ -50,15 +31,17 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:textOff="@string/distance_button"
-            android:textOn="@string/distance_button" />
+            android:textOn="@string/distance_button"
+            android:visibility="gone" />
 
         <ToggleButton
             android:id="@+id/duration_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:textOff="@string/duration_button"
             android:textOn="@string/duration_button"
-            android:textOff="@string/duration_button" />
+            android:visibility="gone" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -79,8 +62,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@string/kilometers"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:text="@string/kilometers" />
 
             <NumberPicker
                 android:id="@+id/distance_picker"
@@ -130,6 +113,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_toRightOf="@id/left"
                 android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -144,13 +128,69 @@
     </RelativeLayout>
 
 
+    <RelativeLayout
+        android:id="@+id/vibration_toggle_layout"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/distance_picker_layout"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:layout_centerVertical="true"
+            android:text="Vibration" />
+
+        <Switch
+            android:id="@+id/vibration_switch"
+            android:textOn="On"
+            android:textOff="Off"
+            android:thumb="@drawable/thumb_selector"
+            android:track="@drawable/switch_style_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/sound_toggle_layout"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/vibration_toggle_layout"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textSize="20dp"
+            android:text="Sound" />
+
+        <Switch
+            android:textOn="On"
+            android:textOff="Off"
+            android:thumb="@drawable/thumb_selector"
+            android:track="@drawable/switch_style_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
+
+
     <Button
         android:id="@+id/rundomize_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/duration_picker_layout"
+
         android:layout_centerInParent="true"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/button_background"
         android:text="@string/rundomize" />
 
 

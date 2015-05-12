@@ -84,7 +84,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
                 durationButtonClicked();
                 break;
             case (R.id.rundomize_button):
-                Intent intent = new Intent(getActivity(), RunningActivity.class);
+                Intent intent = new Intent(getActivity(), LocationActivity.class);
                 if (durationButton.isChecked()) {
                     int duration = getTime();
                     intent.putExtra("duration", duration);
@@ -110,7 +110,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
 
     public void onCheckboxClicked(View view) {
         boolean checked = ((CheckBox) view).isChecked();
-        switch (view.getId()) {
+        /*switch (view.getId()) {
             case R.id.checkbox_audio:
                 if (checked)
                     audio = true;
@@ -123,6 +123,6 @@ public class StartFragment extends Fragment implements View.OnClickListener {
                 else
                     vibration = false;
                 break;
-        }
+        }*/
     }
 }

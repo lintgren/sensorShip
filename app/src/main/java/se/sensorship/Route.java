@@ -20,7 +20,7 @@ public class Route implements Serializable {
     static LatLng[] static_path;
     private final String TAG = "Route";
     private LatLng[] path;
-    private Direction[] directions;
+    static Direction[] directions;
     private List<Integer> turnDirectionOnPathIndex = new ArrayList<>();
     private float startTime = 0;
     private Location currentLocation;
@@ -121,7 +121,7 @@ public class Route implements Serializable {
         int currentIndexOnPath = getClosestPointOnPathIndex();
         int directionPointIndex = 0;
         for (; directionPointIndex < turnDirectionOnPathIndex.size(); directionPointIndex++){
-            if (turnDirectionOnPathIndex.get(directionPointIndex) > currentIndexOnPath){
+            if (turnDirectionOnPathIndex.get(directionPointIndex) >= currentIndexOnPath){
                 break;
             }
         }

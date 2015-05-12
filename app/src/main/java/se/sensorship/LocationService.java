@@ -2,7 +2,6 @@ package se.sensorship;
 
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -19,29 +18,25 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Locale;
 
 public class LocationService extends Service implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    private static final int LEFT_VIBRATE = 1, RIGHT_VIBRATE = 2;
-
     public static final int NOTIFICATION_ID = 1;
-
+    private static final int LEFT_VIBRATE = 1, RIGHT_VIBRATE = 2;
     private final String TAG = "LocationService";
-    private final Object lock = new Object();
     private GoogleApiClient googleApiClient;
     private Route route;
     private boolean loadedTts;
     private TextToSpeech tts;
     private Vibrator vibrator;
-    private Location prevLocation;
     private NotificationManager notificationManager;
     private Notification.Builder notificationBuilder;
     private TimeToTurnThread timeToTurnThread;
     private boolean threadIsStarted = false;
+    private boolean useAudio, useVibration;
 
 
     public LocationService() {
@@ -54,34 +49,35 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     @Override
     public void onCreate() {
-
-        setupTTS();
-        setupVibrator();
-
         googleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
         googleApiClient.connect();
-        route = new Route(new Direction[]{new Direction(55.715079, 13.211094, Direction.RIGHT),
-                new Direction(55.715396, 13.212231, Direction.GOAL),},
-                new LatLng[]{new LatLng(55.714879, 13.211993), new LatLng(55.714879, 13.211993),
-                        new LatLng(55.714927, 13.211742), new LatLng(55.714972, 13.21146),
-                        new LatLng(55.715019, 13.211201), new LatLng(55.715036, 13.211121),
-                        new LatLng(55.715196, 13.211357), new LatLng(55.715299, 13.211585),
-                        new LatLng(55.71538, 13.21185), new LatLng(55.715421, 13.212169)});
+        route = new Route(Route.directions, Route.static_path);
         timeToTurnThread = new TimeToTurnThread(this, route);
+    }
+
+    public Route getRoute() {
+        return route;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle extras = intent.getExtras();
+        useAudio = extras.getBoolean("audio");
+        useVibration = extras.getBoolean("vibration");
+        if (useAudio){
+            setupTTS();
+        }
+        if (useVibration){
+            setupVibrator();
+        }
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationBuilder = new Notification.Builder(this);
         notificationBuilder.setContentTitle("Rundomizer");
+        notificationBuilder.setContentText("Distance: 0.0km");
         notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
         notificationBuilder.setProgress(route.getPathSize(), 0, false);
 
-        Intent notificationIntent = new Intent(this, LocationService.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         startForeground(NOTIFICATION_ID, notificationBuilder.build());
 
         return START_STICKY;
@@ -127,12 +123,12 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         boolean isOnTrack = route.isOnTrack();
         if (!isOnTrack){
             Log.e(TAG, "NOT ON TRACK!");
-            //TODO lämna meddelande till användaren?
+            boolean oldValue = useAudio;
+            useAudio = true;
+            speak("You are not on track");
+            useAudio = oldValue;
         }
-        int progress = route.getClosestPointOnPathIndex();
-        float elapsedDistance = route.getElapsedDistanceOnPath();
-      //
-      //  updateNotification(progress, elapsedDistance);
+        updateNotification(route.getClosestPointOnPathIndex());
 
         Log.d(TAG, "distanceToNextDirection: " + route.distanceToNextDirectionPoint());
         timeToTurnThread.updateLocation(location);
@@ -140,11 +136,10 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
             timeToTurnThread.start();
             threadIsStarted = true;
         }
-        prevLocation = location;
     }
 
 
-    private void updateNotification(int currentPositionInPathIndex, float distanceInMeter) {
+    private void updateNotification(int currentPositionInPathIndex) {
         double distanceInKm = route.getElapsedDistance() / 1000;
         notificationBuilder.setProgress(route.getPathSize(), currentPositionInPathIndex, false);
         notificationBuilder.setContentText("Distance: " + String.format("%.2d", distanceInKm) +
@@ -153,7 +148,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     }
 
     private void speak(String text) {
-        if (!loadedTts){
+        if (!loadedTts || !useAudio){
             return;
         }
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP){
@@ -183,9 +178,12 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     }
 
     private void detailedVibrate(int numberOfVibrations, int vibrateLength) {
+        if (!useVibration){
+            return;
+        }
         long[] pattern = new long[numberOfVibrations * 2];
         for (int i = 0; i < pattern.length; i++){
-            if (i % 2 == 0){ // vibration
+            if (i % 2 == 0){ // useVibration
                 pattern[i] = vibrateLength;
             }else{
                 pattern[i] = 300;
@@ -197,7 +195,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     private void setupTTS() {
         if (tts != null){
-            Log.e("tts not null", "tts not null");
+            Log.e(TAG, "TTS already setup");
             return;
         }
 
@@ -226,15 +224,6 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         }
     }
 
-    private double timeToTurn() {
-        double distance = route.distanceToNextDirectionPoint();
-        if (distance < 100){
-            Log.d(TAG, "speed: " + prevLocation.getSpeed());
-            return distance / prevLocation.getSpeed();
-        }
-        return 1000;
-    }
-
     public void notifyUser() {
         Direction direction = route.nextDirection();
         if (!direction.isLongNotified()){
@@ -243,15 +232,13 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
                     "seconds.");
             direction.setLongNotified();
         }else{
-            speak("Turn " + direction.getDirection());
             vibrate(direction);
+            speak("Turn " + direction.getDirection());
         }
     }
 
     public void notifyUserFinishedRound() {
         longVibrate();
-        speak("Well done! You ran " + route.getElapsedDistance() + " kilometers in " + route.getElapsedTime());
-        Log.d(TAG, Double.toString(route.getElapsedDistance()));
-        Log.d(TAG, Double.toString(route.getElapsedTime()));
+        speak("Well done! You ran " + route.getElapsedDistance() + " kilometers in ");
     }
 }

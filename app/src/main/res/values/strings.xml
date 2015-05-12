@@ -1,7 +1,5 @@
 <resources>
-    <string name="app_name">sensorShip</string>
-
-    <string name="hello_world">Hello world (Simon says2)</string>
+    <string name="app_name">Rundomizer</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_sound_vibration">SoundVibration</string>
     <string name="title_activity_location_activity">LocationActivity</string>
@@ -28,6 +26,6 @@
         <item>12 Feb 2012</item>
     </string-array>
 
-
-
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

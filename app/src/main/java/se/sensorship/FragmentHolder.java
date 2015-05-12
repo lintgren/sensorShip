@@ -8,15 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.Spinner;
-
-import com.google.android.gms.common.api.GoogleApiClient;
 
 /**
  * Created by Andy on 15-04-14.
@@ -93,17 +85,17 @@ public class FragmentHolder extends FragmentActivity {
         @Override
         public Fragment getItem(int i) {
             if (i == 0) {
-                Fragment fragment = new DemoObjectFragment();
+                Fragment fragment = new MapFragment();
                 Bundle args = new Bundle();
                 // Our object is just an integer :-P
-                args.putInt(DemoObjectFragment.ARG_OBJECT, i + 1);
+                args.putInt(MapFragment.ARG_OBJECT, i + 1);
                 fragment.setArguments(args);
                 return fragment;
             } else {
                 Fragment fragment = new StartFragment();
                 Bundle args = new Bundle();
                 // Our object is just an integer :-P
-                args.putInt(DemoObjectFragment.ARG_OBJECT, i + 1);
+                args.putInt(MapFragment.ARG_OBJECT, i + 1);
                 fragment.setArguments(args);
                 return fragment;
             }
@@ -120,50 +112,14 @@ public class FragmentHolder extends FragmentActivity {
         }
     }
 
-    // Instances of this class are fragments representing a single
-// object in our collection.
-    public static class DemoObjectFragment extends Fragment implements AdapterView.OnItemSelectedListener {
-        public static final String ARG_OBJECT = "object";
+    public void onCheckboxClicked(View view) {
+        FragmentManager fm = getSupportFragmentManager();
+        StartFragment fragment = (StartFragment) fm.findFragmentById(0);
+        fragment.onCheckboxClicked(view);
+    }
 
-        Spinner spinner;
-        ImageView map;
-        String[] lap;
-        @Override
-        public View onCreateView(LayoutInflater inflater,
-                                 ViewGroup container, Bundle savedInstanceState) {
-            // The last two arguments ensure LayoutParams are inflated
-            // properly.
-            View rootView = inflater.inflate(
-                    R.layout.fragment_history, container, false);
-            spinner = (Spinner) rootView.findViewById(R.id.prev_runs);
-            lap = getResources().getStringArray(R.array.prev_runs);
-            map = (ImageView) rootView.findViewById(R.id.ivMap);
-            spinner.setOnItemSelectedListener(this);
-            // Create an ArrayAdapter using the string array and a default spinner layout
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                    R.array.prev_runs, android.R.layout.simple_spinner_item);
-            // Specify the layout to use when the list of choices appears
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // Apply the adapter to the spinner
-            spinner.setAdapter(adapter);
-
-            return rootView;
-        }
-
-        public void onItemSelected(AdapterView<?> parent, View view,
-                                   int pos, long id) {
-            if (parent.getItemAtPosition(pos).equals(lap[1])){
-                map.setImageResource(R.drawable.karta1);
-            }else{
-                map.setImageResource(R.drawable.karta);
-            }
-            // An item was selected. You can retrieve the selected item using
-            // parent.getItemAtPosition(pos)
-        }
-
-        public void onNothingSelected(AdapterView<?> parent) {
-            // Another interface callback
-        }
+    //   @Override
+    protected void OnFragmentInteractionListener() {
 
     }
 }
