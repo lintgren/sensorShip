@@ -1,16 +1,22 @@
 package se.sensorship;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.ToggleButton;
+
+import java.lang.reflect.Field;
 
 
 public class StartFragment extends Fragment implements View.OnClickListener {
@@ -28,6 +34,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
         distancePicker = (NumberPicker) v.findViewById(R.id.distance_picker);
         distancePicker.setMaxValue(100);
         distancePicker.setMinValue(0);
+        setNumberPickerTextColor(distancePicker, Color.parseColor("#FFFFFF"));
 
         minutesPicker = (NumberPicker) v.findViewById(R.id.minutes_picker);
         minutesPicker.setMaxValue(59);
@@ -51,6 +58,8 @@ public class StartFragment extends Fragment implements View.OnClickListener {
         distancePickerLayout = (RelativeLayout) v.findViewById(R.id.distance_picker_layout);
 
         distanceButtonClicked();
+
+
         return v;
     }
 
@@ -106,6 +115,32 @@ public class StartFragment extends Fragment implements View.OnClickListener {
 
     private int getDistance() {
         return distancePicker.getValue();
+    }
+
+    //Från Stackoverflow http://stackoverflow.com/questions/22962075/change-the-text-color-of-numberpicker
+    public static boolean setNumberPickerTextColor(NumberPicker numberPicker, int color) {
+        final int count = numberPicker.getChildCount();
+        for (int i = 0; i < count; i++) {
+            View child = numberPicker.getChildAt(i);
+            if (child instanceof EditText) {
+                try {
+                    Field selectorWheelPaintField = numberPicker.getClass()
+                            .getDeclaredField("mSelectorWheelPaint");
+                    selectorWheelPaintField.setAccessible(true);
+                    ((Paint) selectorWheelPaintField.get(numberPicker)).setColor(color);
+                    ((EditText) child).setTextColor(color);
+                    numberPicker.invalidate();
+                    return true;
+                } catch (NoSuchFieldException e) {
+                    Log.w("PickerTextColor", e);
+                } catch (IllegalAccessException e) {
+                    Log.w("PickerTextColor", e);
+                } catch (IllegalArgumentException e) {
+                    Log.w("PickerTextColor", e);
+                }
+            }
+        }
+        return false;
     }
 
     public void onCheckboxClicked(View view) {
