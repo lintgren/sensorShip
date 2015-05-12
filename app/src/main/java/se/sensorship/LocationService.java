@@ -19,6 +19,8 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Locale;
 
 public class LocationService extends Service implements GoogleApiClient.ConnectionCallbacks,
@@ -142,7 +144,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private void updateNotification(int currentPositionInPathIndex) {
         double distanceInKm = route.getElapsedDistance() / 1000;
         notificationBuilder.setProgress(route.getPathSize(), currentPositionInPathIndex, false);
-        notificationBuilder.setContentText("Distance: " + String.format("%.2d", distanceInKm) +
+        NumberFormat formatter = new DecimalFormat("#0.00");
+        notificationBuilder.setContentText("Distance: " + formatter.format(distanceInKm) +
                 "km");
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
     }

@@ -2,10 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffffff"
     android:gravity="center"
+    android:background="#00FFFFFF"
     android:orientation="vertical">
-
 
     <RelativeLayout
         android:id="@+id/buttons_layout"
@@ -63,10 +62,12 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center_horizontal"
+                android:textColor="#FFFFFF"
                 android:text="@string/kilometers" />
 
             <NumberPicker
                 android:id="@+id/distance_picker"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true" />
@@ -141,6 +142,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20dp"
+            android:textColor="#FFFFFF"
             android:layout_centerVertical="true"
             android:text="Vibration" />
 
@@ -168,6 +170,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:textColor="#FFFFFF"
             android:textSize="20dp"
             android:text="Sound" />
 
@@ -186,7 +189,7 @@
         android:id="@+id/rundomize_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        android:textColor="#FFFFFF"
         android:layout_centerInParent="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="50dp"
