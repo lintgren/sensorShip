@@ -51,11 +51,8 @@ public class TimeToTurnThread extends Thread {
         while (direction.getDirection().equals(Direction.GOAL)) {
             try {
                 long sleepTime;
-                if (direction.isLongNotified()) {
-                    sleepTime = (long) ((timeToTurn - Direction.SHORT_ALERT_TIME) * 1000);
-                } else {
-                    sleepTime = (long) ((timeToTurn - Direction.LONG_ALERT_TIME) * 1000);
-                }
+                sleepTime = (long) (timeToTurn * 1000);
+
                 if (sleepTime > 0) {
                     sleep(sleepTime);
                 }

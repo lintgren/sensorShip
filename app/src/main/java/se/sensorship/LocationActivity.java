@@ -1,10 +1,8 @@
 package se.sensorship;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -57,6 +55,8 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
         vibration = intent.getBooleanExtra("vibration", true);
         audio = intent.getBooleanExtra("audio", true);
         startLocationService();
+
+        /* Commented out audio-toast
         if (audio) {
             AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
             if (!am.isWiredHeadsetOn()) {
@@ -66,6 +66,7 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
                 Toast.makeText(this, "Fuck you, you well prepared biatch", Toast.LENGTH_LONG).cancel();
             }
         }
+        */
         Toast toast = new Toast(getApplicationContext());
         toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
         toast.setDuration(Toast.LENGTH_LONG);
@@ -82,7 +83,9 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
     }
 
     private void startLocationService() {
-        longPath = new LatLng[]{new LatLng(55.714875, 13.211989),
+
+        //Longer path
+        LatLng[] longPath = new LatLng[]{new LatLng(55.714875, 13.211989),
                 new LatLng(55.714875, 13.211989),
                 new LatLng(55.714732, 13.211869),
                 new LatLng(55.714542, 13.211739),
@@ -118,6 +121,7 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
 
         new Route(longDirections,longPath);
 
+        /*
         new Route(new Direction[]{new Direction(55.715079, 13.211094, Direction.RIGHT),
                 new Direction(55.715396, 13.212231, Direction.GOAL),},
                 new LatLng[]{new LatLng(55.714879, 13.211993), new LatLng(55.714879, 13.211993),
@@ -125,7 +129,7 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
                         new LatLng(55.715019, 13.211201), new LatLng(55.715036, 13.211121),
                         new LatLng(55.715196, 13.211357), new LatLng(55.715299, 13.211585),
                         new LatLng(55.71538, 13.21185), new LatLng(55.715421, 13.212169)});
-
+        */
         locationServiceIntent = new Intent(this, LocationService.class);
         Bundle extras = new Bundle();
         extras.putInt("distance", distance);

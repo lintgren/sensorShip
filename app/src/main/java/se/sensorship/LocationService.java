@@ -239,6 +239,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     public void notifyUserFinishedRound() {
         longVibrate();
-        speak("Well done! You ran " + route.getElapsedDistance() + " kilometers in ");
+        double elapsedDistance = Math.round(route.getElapsedDistance()*100)/100;
+        speak("Well done! You ran " + elapsedDistance + " kilometers in ");
     }
 }
