@@ -3,9 +3,13 @@ package se.sensorship;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 public class RunningActivity extends Activity {
@@ -18,6 +22,9 @@ public class RunningActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_running);
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast_vibration_help,
+                (ViewGroup) findViewById(R.id.toast_layout_root));
         Intent intent = getIntent();
         distance = intent.getIntExtra("distance", -1);
         duration = intent.getIntExtra("duration", -1);
@@ -25,6 +32,11 @@ public class RunningActivity extends Activity {
         audio = intent.getBooleanExtra("audio", true);
         startLocationService();
         getActionBar().hide();
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(layout);
+        toast.show();
     }
 
 

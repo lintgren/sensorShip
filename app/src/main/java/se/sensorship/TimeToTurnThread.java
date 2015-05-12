@@ -48,21 +48,25 @@ public class TimeToTurnThread extends Thread {
             }catch (InterruptedException e){
             }
         }
-        while (direction.getDirection().equals(Direction.GOAL)){
-            try{
+        while (direction.getDirection().equals(Direction.GOAL)) {
+            try {
                 long sleepTime;
-                if (direction.isLongNotified()){
+                if (direction.isLongNotified()) {
                     sleepTime = (long) ((timeToTurn - Direction.SHORT_ALERT_TIME) * 1000);
-                }else{
+                } else {
                     sleepTime = (long) ((timeToTurn - Direction.LONG_ALERT_TIME) * 1000);
                 }
-                if (sleepTime > 0){
+                if (sleepTime > 0) {
                     sleep(sleepTime);
                 }
-            }catch (InterruptedException e){
+                if(direction.isShortnotified()){
+                    return;
+                }
+                locationService.notifyUserFinishedRound();
+                direction.setShortnotified();
+            } catch (InterruptedException e) {
             }
         }
-        locationService.notifyUserFinishedRound();
         Log.d(TAG, "Route finished!");
     }
 

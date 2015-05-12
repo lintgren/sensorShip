@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.location.Location;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -43,8 +46,11 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast_vibration_help,
+                (ViewGroup) findViewById(R.id.toast_layout_root));
         setContentView(R.layout.activity_location_activity);
-
+        getActionBar().hide();
         Intent intent = getIntent();
         distance = intent.getIntExtra("distance", -1);
         duration = intent.getIntExtra("duration", -1);
@@ -60,7 +66,11 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
                 Toast.makeText(this, "Fuck you, you well prepared biatch", Toast.LENGTH_LONG).cancel();
             }
         }
-
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(layout);
+        toast.show();
         path = Route.static_path;
         buildGoogleApiClient();
         googleApiClient.connect();
