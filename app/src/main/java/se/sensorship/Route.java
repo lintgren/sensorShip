@@ -16,13 +16,13 @@ import java.util.List;
  */
 public class Route implements Serializable {
     //TODO remove the fist two attributes, only used for the map
-    static List<LatLng> pointsToTurn = new ArrayList<>();
+    static List<LatLng> pointsToTurn = new ArrayList<LatLng>();
     static LatLng[] static_path;
     private final String TAG = "Route";
     private LatLng[] path;
     private Direction[] directions;
     private List<Integer> turnDirectionOnPathIndex = new ArrayList<>();
-
+    private float startTime = 0;
     private Location currentLocation;
     private int closestPointOnPathIndex = 0;
 
@@ -61,6 +61,8 @@ public class Route implements Serializable {
     }
 
     public void updateLocation(Location location) {
+        if(startTime==0)
+            startTime=location.getTime();
         currentLocation = location;
         prevLocations.add(location);
         updateClosestPointOnPathIndex();
@@ -139,6 +141,20 @@ public class Route implements Serializable {
         ret.setLatitude(source.latitude);
         ret.setLongitude(source.longitude);
         return ret;
+    }
+
+    public float getElapsedDistanceOnPath() {
+        int currentIndexOnPath = getClosestPointOnPathIndex();
+        float distance = 0;
+        for (int i = 0; i < currentIndexOnPath; i++){
+            distance += convertLatLngToLocation(path[i]).distanceTo(convertLatLngToLocation
+                    (path[i + 1]));
+        }
+        return distance;
+    }
+    public float getElapsedTime(){
+        float currentTime = currentLocation.getTime();
+        return currentTime - startTime;
     }
 
     public double getElapsedDistance() {
