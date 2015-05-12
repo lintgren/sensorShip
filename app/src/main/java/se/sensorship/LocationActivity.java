@@ -34,7 +34,7 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
     LocationRequest locationRequest;
     Date lastUpdate;
     public static GoogleMap mMap;
-    private LatLng[] path;
+    private LatLng[] path, longPath;
 
     private Intent locationServiceIntent;
     private int distance, duration;
@@ -72,6 +72,41 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
     }
 
     private void startLocationService() {
+        longPath = new LatLng[]{new LatLng(55.714875, 13.211989),
+                new LatLng(55.714875, 13.211989),
+                new LatLng(55.714732, 13.211869),
+                new LatLng(55.714542, 13.211739),
+                new LatLng(55.714388, 13.2117),
+                new LatLng(55.714225, 13.211577),
+                new LatLng(55.714022, 13.211438),
+                new LatLng(55.713896, 13.21149),
+                new LatLng(55.713857, 13.211782),
+                new LatLng(55.713834, 13.21197),
+                new LatLng(55.713702, 13.211783),
+                new LatLng(55.713634, 13.211431),
+                new LatLng(55.713631, 13.211127),
+                new LatLng(55.7138, 13.21103),
+                new LatLng(55.71403, 13.210915),
+                new LatLng(55.714119, 13.210897),
+                new LatLng(55.714276, 13.210761),
+                new LatLng(55.714453, 13.210563),
+                new LatLng(55.714658, 13.210407),
+                new LatLng(55.714832, 13.210585),
+                new LatLng(55.7149, 13.210711),
+                new LatLng(55.715019, 13.210901),
+                new LatLng(55.715084, 13.211128),
+                new LatLng(55.715027, 13.211471),
+                new LatLng(55.714971, 13.211732),
+                new LatLng(55.714971, 13.211732)};
+        Direction[] longDirections = new Direction[]{new Direction(55.71391, 13.21140,Direction.LEFT),
+        new Direction(55.71377, 13.21205, Direction.RIGHT),
+        new Direction(55.71371, 13.21205, Direction.RIGHT),
+        new Direction(55.713600, 13.2111, Direction.SLIGHT_RIGHT),
+        new Direction(55.71464, 13.21040, Direction.SLIGHT_RIGHT),
+        new Direction(55.715084, 13.21107, Direction.RIGHT),
+        new Direction(55.714971, 13.211732, Direction.GOAL)};
+
+        new Route(longDirections,longPath);
 
         new Route(new Direction[]{new Direction(55.715079, 13.211094, Direction.RIGHT),
                 new Direction(55.715396, 13.212231, Direction.GOAL),},

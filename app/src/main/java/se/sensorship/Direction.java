@@ -8,6 +8,8 @@ import com.google.android.gms.maps.model.LatLng;
 public class Direction {
     public final static String LEFT = "Left";
     public final static String RIGHT = "Right";
+    public final static String SLIGHT_RIGHT = "Slight right";
+    public final static String SLIGHT_LEFT = "Slight left";
     public final static String STRAIGHT = "Straight";
     public final static String GOAL = "Finished";
     public static final int LONG_ALERT_TIME = 10, SHORT_ALERT_TIME = 3;
