@@ -14,33 +14,17 @@
         android:layout_centerHorizontal="true">
 
         <Switch
-            android:id="@+id/distance_duration_toggle"
+            android:id="@+id/distance_duration_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:textOff="Distance"
-            android:textOn="Duration"
+            android:checked="true"
+            android:textOn="Distance"
+            android:textOff="Duration"
             android:thumb="@drawable/thumb_style"
             android:track="@drawable/switch_style" />
 
-        <ToggleButton
-            android:id="@+id/distance_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:textOff="@string/distance_button"
-            android:textOn="@string/distance_button"
-            android:visibility="gone" />
-
-        <ToggleButton
-            android:id="@+id/duration_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:textOff="@string/duration_button"
-            android:textOn="@string/duration_button"
-            android:visibility="gone" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -100,6 +84,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/white"
                     android:text="@string/hours" />
 
                 <NumberPicker
@@ -118,6 +103,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/white"
                     android:text="@string/minutes" />
 
                 <NumberPicker
@@ -150,6 +136,7 @@
             android:id="@+id/vibration_switch"
             android:textOn="On"
             android:textOff="Off"
+            android:checked="true"
             android:thumb="@drawable/thumb_selector"
             android:track="@drawable/switch_style_small"
             android:layout_width="wrap_content"
@@ -177,6 +164,7 @@
         <Switch
             android:textOn="On"
             android:textOff="Off"
+            android:checked="true"
             android:thumb="@drawable/thumb_selector"
             android:track="@drawable/switch_style_small"
             android:layout_width="wrap_content"

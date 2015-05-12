@@ -3,11 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#00FFFFFF"
+
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="@dimen/activity_horizontal_margin"
         android:orientation="vertical">
 
         <LinearLayout
@@ -26,17 +28,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
+                    android:textColor="@color/white"
                     android:text="@string/date_time" />
 
                 <TextView
                     android:layout_toRightOf="@id/date_time_static"
                     android:text="0"
+                    android:textColor="@color/white"
                     android:id="@+id/tvDateTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/speed_static"
+                    android:textColor="@color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -45,6 +50,7 @@
                 <TextView
                     android:layout_toRightOf="@id/speed_static"
                     android:text="0"
+                    android:textColor="@color/white"
                     android:id="@+id/tvlapSpeed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -58,12 +64,14 @@
                     android:id="@+id/distance_static"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/white"
                     android:layout_alignParentLeft="true"
                     android:text="@string/distance" />
 
                 <TextView
                     android:id="@+id/tvDistance"
                     android:text="0"
+                    android:textColor="@color/white"
                     android:layout_toRightOf="@id/distance_static"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -71,6 +79,7 @@
                 <TextView
                     android:id="@+id/lap_duration_static"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/white"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:text="@string/lap_duration" />
@@ -79,6 +88,7 @@
                     android:id="@+id/tvDuration"
                     android:layout_toRightOf="@+id/lap_duration_static"
                     android:text="0"
+                    android:textColor="@color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </RelativeLayout>
@@ -86,12 +96,15 @@
 
         <ImageView
             android:id="@+id/ivMap"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="370dp"
             android:scaleType="centerCrop"
             android:src="@drawable/karta" />
         <Spinner
             android:id="@+id/prev_runs"
+            android:background="#40FFFFFF"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />
     </LinearLayout>

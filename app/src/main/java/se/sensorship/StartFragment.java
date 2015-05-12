@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.ToggleButton;
 
 import java.lang.reflect.Field;
@@ -24,6 +26,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
     private ToggleButton distanceButton, durationButton;
     private RelativeLayout durationPickerLayout, distancePickerLayout;
     private NumberPicker minutesPicker, hoursPicker, distancePicker;
+    private Switch distanceDurationSwitch;
     private Boolean audio = true;
     private Boolean vibration = true;
 
@@ -44,68 +47,55 @@ public class StartFragment extends Fragment implements View.OnClickListener {
         hoursPicker.setMaxValue(23);
         hoursPicker.setMinValue(0);
 
-        distanceButton = (ToggleButton) v.findViewById(R.id.distance_button);
-        durationButton = (ToggleButton) v.findViewById(R.id.duration_button);
+        setNumberPickerTextColor(distancePicker, Color.parseColor("#FFFFFF"));
+        setNumberPickerTextColor(hoursPicker, Color.parseColor("#FFFFFF"));
+        setNumberPickerTextColor(minutesPicker, Color.parseColor("#FFFFFF"));
+
+
         rundomizerButton = (Button) v.findViewById(R.id.rundomize_button);
 
-        distanceButton.setBackgroundColor(getResources().getColor(R.color.button_material_dark));
-        durationButton.setBackgroundColor(getResources().getColor(R.color.button_material_light));
+
         rundomizerButton.setOnClickListener(this);
-        distanceButton.setOnClickListener(this);
-        durationButton.setOnClickListener(this);
+
 
         durationPickerLayout = (RelativeLayout) v.findViewById(R.id.duration_picker_layout);
         distancePickerLayout = (RelativeLayout) v.findViewById(R.id.distance_picker_layout);
 
-        distanceButtonClicked();
-
+        distanceDurationSwitch = (Switch) v.findViewById(R.id.distance_duration_switch);
+        distanceDurationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked) {
+                    distancePickerLayout.setVisibility(View.INVISIBLE);
+                    durationPickerLayout.setVisibility(View.VISIBLE);
+                } else {
+                    durationPickerLayout.setVisibility(View.INVISIBLE);
+                    distancePickerLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         return v;
-    }
-
-    private void distanceButtonClicked() {
-        distanceButton.setBackgroundColor(getResources().getColor(R.color.button_material_dark));
-        durationButton.setBackgroundColor(getResources().getColor(R.color.button_material_light));
-        durationButton.setChecked(false);
-        distanceButton.setChecked(true);
-        durationPickerLayout.setVisibility(View.INVISIBLE);
-        distancePickerLayout.setVisibility(View.VISIBLE);
-    }
-
-    public void durationButtonClicked() {
-        durationButton.setBackgroundColor(getResources().getColor(R.color.button_material_dark));
-        distanceButton.setBackgroundColor(getResources().getColor(R.color.button_material_light));
-        distanceButton.setChecked(false);
-        durationButton.setChecked(true);
-
-        durationPickerLayout.setVisibility(View.VISIBLE);
-        distancePickerLayout.setVisibility(View.INVISIBLE);
     }
 
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case (R.id.distance_button):
-                distanceButtonClicked();
-                break;
-            case (R.id.duration_button):
-                durationButtonClicked();
-                break;
             case (R.id.rundomize_button):
                 Intent intent = new Intent(getActivity(), LocationActivity.class);
-                if (durationButton.isChecked()) {
-                    int duration = getTime();
-                    intent.putExtra("duration", duration);
-                }
-                if (distanceButton.isChecked()) {
+                if (distanceDurationSwitch.isChecked()) {
                     int distance = getDistance();
                     intent.putExtra("distance", distance);
+                } else {
+                    int duration = getTime();
+                    intent.putExtra("duration", duration);
                 }
                 intent.putExtra("vibration", vibration);
                 intent.putExtra("audio", audio);
                 startActivity(intent);
                 break;
+
         }
     }
 
@@ -160,4 +150,5 @@ public class StartFragment extends Fragment implements View.OnClickListener {
                 break;
         }*/
     }
+
 }
