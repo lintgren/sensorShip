@@ -34,17 +34,24 @@ public class TimeToTurnThread extends Thread {
             Log.d(TAG, "TimeToTurn: " + timeToTurn);
             try{
                 long sleepTime;
-                if (direction.isLongNotified()){
-                    sleepTime = (long) ((timeToTurn - Direction.SHORT_ALERT_TIME) * 1000);
-                }else{
+                if(!direction.isLongNotified()){
+                    Log.d("Time to turn","Waiting for long notification");
                     sleepTime = (long) ((timeToTurn - Direction.LONG_ALERT_TIME) * 1000);
                 }
+                else if (!direction.isShortnotified()){
+                    Log.d("Time to turn","Waiting for short notification");
+                    sleepTime = (long) ((timeToTurn - Direction.SHORT_ALERT_TIME) * 1000);
+                }
+                else
+                    sleepTime = Long.MAX_VALUE;
+
                 if (sleepTime > 0){
                     sleep(sleepTime);
                 }
                 locationService.notifyUser();
+
                 Log.d(TAG, "We have waited " + sleepTime/1000 + " sec");
-                sleep(Long.MAX_VALUE);
+                //sleep(Long.MAX_VALUE);
             }catch (InterruptedException e){
             }
         }
@@ -72,7 +79,9 @@ public class TimeToTurnThread extends Thread {
         locationHead = (locationHead + 1) % oldLocations.length;
         calculateSpeed();
         calculateTimeToTurn();
-        this.interrupt();
+        if(!route.nextDirection().isLongNotified()) {
+            this.interrupt();
+        }
     }
 
 

@@ -37,6 +37,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private TimeToTurnThread timeToTurnThread;
     private boolean threadIsStarted = false;
     private boolean useAudio, useVibration;
+    private boolean GPSWorking = true;
 
 
     public LocationService() {
@@ -112,9 +113,15 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     @Override
     public void onLocationChanged(Location location) {
+
         Log.d(TAG, "Accuracy: " + location.getAccuracy());
-        if (location.getAccuracy() < 7){
+        if (location.getAccuracy() < 15
+                ){
             onLocationChangedSynchronized(location);
+            GPSWorking = true;
+        }else if(GPSWorking){
+            GPSWorking = false;
+         //   speak("We have lost GPS location, please hold");
         }
     }
 
@@ -142,8 +149,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private void updateNotification(int currentPositionInPathIndex) {
         double distanceInKm = route.getElapsedDistance() / 1000;
         notificationBuilder.setProgress(route.getPathSize(), currentPositionInPathIndex, false);
-        notificationBuilder.setContentText("Distance: " + String.format("%.2d", distanceInKm) +
-                "km");
+     //   notificationBuilder.setContentText("Distance: " + String.format("%.2d", distanceInKm) +
+     //           "km");
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
     }
 
@@ -234,6 +241,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         }else{
             vibrate(direction);
             speak("Turn " + direction.getDirection());
+            direction.setShortnotified();
         }
     }
 
