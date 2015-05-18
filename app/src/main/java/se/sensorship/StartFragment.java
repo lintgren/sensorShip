@@ -19,6 +19,7 @@ import android.widget.Switch;
 import android.widget.ToggleButton;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 
 public class StartFragment extends Fragment implements View.OnClickListener {
@@ -34,18 +35,22 @@ public class StartFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_start, container, false);
+
         distancePicker = (NumberPicker) v.findViewById(R.id.distance_picker);
-        distancePicker.setMaxValue(100);
-        distancePicker.setMinValue(0);
+        String[] distancePickerValues = getPickerValues(1, 42);
+        distancePicker.setDisplayedValues(distancePickerValues);
+        distancePicker.setMaxValue(distancePickerValues.length - 1);
         setNumberPickerTextColor(distancePicker, Color.parseColor("#FFFFFF"));
 
         minutesPicker = (NumberPicker) v.findViewById(R.id.minutes_picker);
-        minutesPicker.setMaxValue(59);
-        minutesPicker.setMinValue(0);
+        String[] minutesPickerValues = getPickerValues(0, 59);
+        minutesPicker.setDisplayedValues(minutesPickerValues);
+        minutesPicker.setMaxValue(minutesPickerValues.length - 1);
 
         hoursPicker = (NumberPicker) v.findViewById(R.id.hours_picker);
-        hoursPicker.setMaxValue(23);
-        hoursPicker.setMinValue(0);
+        String[] hoursPickerValues = getPickerValues(0, 5);
+        hoursPicker.setDisplayedValues(hoursPickerValues);
+        hoursPicker.setMaxValue(hoursPickerValues.length - 1);
 
         setNumberPickerTextColor(distancePicker, Color.parseColor("#FFFFFF"));
         setNumberPickerTextColor(hoursPicker, Color.parseColor("#FFFFFF"));
@@ -131,6 +136,17 @@ public class StartFragment extends Fragment implements View.OnClickListener {
             }
         }
         return false;
+    }
+
+    public String[] getPickerValues(int min, int max) {
+
+        ArrayList<String> result = new ArrayList<>();
+        result.add(Integer.toString(min));
+        for (int i = max; i > min; i--) {
+            result.add(Integer.toString(i));
+        }
+
+        return result.toArray(new String[0]);
     }
 
     public void onCheckboxClicked(View view) {
