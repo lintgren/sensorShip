@@ -82,7 +82,7 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
 
     @Override
     public void onConnected(Bundle hint) {
-        if (updateLocation){
+        if (updateLocation) {
             startLocationUpdates();
         }
     }
@@ -116,7 +116,7 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
     @Override
     protected void onResume() {
         super.onResume();
-        if (googleApiClient.isConnected() && !updateLocation){
+        if (googleApiClient.isConnected() && !updateLocation) {
             startLocationUpdates();
         }
     }

@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
-import android.text.Layout;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;

@@ -30,8 +30,8 @@ public class TimeToTurnThread extends Thread {
         while (!direction.getDirection().equals(Direction.GOAL)){
             direction = route.nextDirection();
             Direction prevDirection = route.prevDirection();
-            if(prevDirection == null) Log.d(TAG, "PrevDir is null");
-            if(prevDirection!= null && !prevDirection.isShortnotified()){
+            if (prevDirection == null) Log.d(TAG, "PrevDir is null");
+            if (prevDirection != null && !prevDirection.isShortnotified()) {
                 Log.d(TAG, "prevDir is a " + prevDirection.getDirection());
                 locationService.notifyUser(prevDirection);
             }
@@ -81,7 +81,7 @@ public class TimeToTurnThread extends Thread {
         locationHead = (locationHead + 1) % oldLocations.length;
         calculateSpeed();
         calculateTimeToTurn();
-        if(!route.nextDirection().isLongNotified()){
+        if (!route.nextDirection().isLongNotified()) {
             this.interrupt();
         }
     }

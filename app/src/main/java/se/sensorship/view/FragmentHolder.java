@@ -82,14 +82,14 @@ public class FragmentHolder extends FragmentActivity {
 
         @Override
         public Fragment getItem(int i) {
-            if (i == 0){
+            if (i == 0) {
                 Fragment fragment = new HistoryFragment();
                 Bundle args = new Bundle();
                 // Our object is just an integer :-P
                 args.putInt(HistoryFragment.ARG_OBJECT, i + 1);
                 fragment.setArguments(args);
                 return fragment;
-            }else{
+            } else {
                 Fragment fragment = new StartFragment();
                 Bundle args = new Bundle();
                 // Our object is just an integer :-P

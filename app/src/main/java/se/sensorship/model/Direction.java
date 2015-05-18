@@ -17,7 +17,7 @@ public class Direction {
     private String direction;
     private boolean longNotified = false;
 
-    public Direction(LatLng location, String direction){
+    public Direction(LatLng location, String direction) {
         this.location = location;
         this.direction = direction;
     }

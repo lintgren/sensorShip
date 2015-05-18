@@ -29,7 +29,7 @@ public class Route implements Serializable {
     private List<Location> prevLocations = new ArrayList<>();
 
     public Route(Direction[] directions, LatLng[] path) {
-        this.directions = directions;
+        Route.directions = directions;
         this.path = path;
         static_path = path;
         int closestPointOnPathIndex = 0;
@@ -148,14 +148,14 @@ public class Route implements Serializable {
     public Direction prevDirection() {
         int currentIndexOnPath = getClosestPointOnPathIndex();
         int directionPointIndex = 0;
-        for (; directionPointIndex < turnDirectionOnPathIndex.size(); directionPointIndex++){
-            if (turnDirectionOnPathIndex.get(directionPointIndex) >= currentIndexOnPath){
+        for (; directionPointIndex < turnDirectionOnPathIndex.size(); directionPointIndex++) {
+            if (turnDirectionOnPathIndex.get(directionPointIndex) >= currentIndexOnPath) {
                 break;
             }
         }
-        if(directionPointIndex > 0){
-            return directions[directionPointIndex-1];
-        }else{
+        if (directionPointIndex > 0) {
+            return directions[directionPointIndex - 1];
+        } else {
             return null;
         }
     }
