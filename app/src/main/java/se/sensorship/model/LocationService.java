@@ -20,6 +20,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -129,8 +130,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     @Override
     public void onConnected(Bundle bundle) {
         LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(1500);
-        locationRequest.setFastestInterval(1500);
+        locationRequest.setInterval(1000);
+        locationRequest.setFastestInterval(1000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,
                 locationRequest, this);
@@ -148,15 +149,12 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     @Override
     public void onLocationChanged(Location location) {
-
-        Log.d(TAG, "Accuracy: " + location.getAccuracy());
-        if (location.getAccuracy() < 15
-                ){
+        if (location.getAccuracy() < 15){
             onLocationChangedSynchronized(location);
             GPSWorking = true;
-        }else if(GPSWorking){
+        }else if (GPSWorking){
             GPSWorking = false;
-         //   speak("We have lost GPS location, please hold");
+            //   speak("We have lost GPS location, please hold");
         }
     }
 
@@ -184,8 +182,9 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private void updateNotification(int currentPositionInPathIndex) {
         double distanceInKm = route.getElapsedDistance() / 1000;
         notificationBuilder.setProgress(route.getPathSize(), currentPositionInPathIndex, false);
-     //   notificationBuilder.setContentText("Distance: " + String.format("%.2d", distanceInKm) +
-     //           "km");
+        notificationBuilder.setContentText("Distance: " + new DecimalFormat("##.#").format
+                (distanceInKm) +
+                "km");
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
     }
 
@@ -207,9 +206,11 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     }
 
     private void vibrate(Direction direction) {
-        if (direction.getDirection().equals(Direction.LEFT) || direction.getDirection().equals(Direction.SLIGHT_LEFT)){
+        if (direction.getDirection().equals(Direction.LEFT) || direction.getDirection().equals
+                (Direction.SLIGHT_LEFT)){
             vibrate(LEFT_VIBRATE);
-        }else if (direction.getDirection().equals(Direction.RIGHT) || direction.getDirection().equals(Direction.SLIGHT_RIGHT)){
+        }else if (direction.getDirection().equals(Direction.RIGHT) || direction.getDirection()
+                .equals(Direction.SLIGHT_RIGHT)){
             vibrate(RIGHT_VIBRATE);
         }
 
@@ -283,7 +284,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     public void notifyUserFinishedRound() {
         longVibrate();
         long elapsedTime = Math.round((new Date().getTime() - startTime) / 1000);
-        String distance = String.format("%.2f", route.getElapsedDistance()/1000);
+        String distance = new DecimalFormat("##.#").format(route.getElapsedDistance()/1000);
         speak("Well done! You ran " + distance + " kilometers in " + elapsedTime + "seconds");
     }
 }

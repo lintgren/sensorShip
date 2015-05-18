@@ -57,8 +57,6 @@ public class Route implements Serializable {
     }
 
     public void updateLocation(Location location) {
-        if(startTime==0)
-            startTime=location.getTime();
         currentLocation = location;
         prevLocations.add(location);
         updateClosestPointOnPathIndex();
