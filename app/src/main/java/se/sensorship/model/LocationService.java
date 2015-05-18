@@ -207,9 +207,9 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     }
 
     private void vibrate(Direction direction) {
-        if (direction.getDirection().equals(Direction.LEFT)){
+        if (direction.getDirection().equals(Direction.LEFT) || direction.getDirection().equals(Direction.SLIGHT_LEFT)){
             vibrate(LEFT_VIBRATE);
-        }else if (direction.getDirection().equals(Direction.RIGHT)){
+        }else if (direction.getDirection().equals(Direction.RIGHT) || direction.getDirection().equals(Direction.SLIGHT_RIGHT)){
             vibrate(RIGHT_VIBRATE);
         }
 

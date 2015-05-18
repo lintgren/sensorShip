@@ -55,7 +55,6 @@ public class StartFragment extends Fragment implements View.OnClickListener {
 
         rundomizerButton = (Button) v.findViewById(R.id.rundomize_button);
 
-
         rundomizerButton.setOnClickListener(this);
 
 
