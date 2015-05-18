@@ -1,4 +1,4 @@
-package se.sensorship;
+package se.sensorship.view;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,10 +20,11 @@ import android.widget.ToggleButton;
 
 import java.lang.reflect.Field;
 
+import se.sensorship.R;
+
 
 public class StartFragment extends Fragment implements View.OnClickListener {
     private Button rundomizerButton;
-    private ToggleButton distanceButton, durationButton;
     private RelativeLayout durationPickerLayout, distancePickerLayout;
     private NumberPicker minutesPicker, hoursPicker, distancePicker;
     private Switch distanceDurationSwitch;
@@ -131,24 +132,6 @@ public class StartFragment extends Fragment implements View.OnClickListener {
             }
         }
         return false;
-    }
-
-    public void onCheckboxClicked(View view) {
-        boolean checked = ((CheckBox) view).isChecked();
-        /*switch (view.getId()) {
-            case R.id.checkbox_audio:
-                if (checked)
-                    audio = true;
-                else
-                    audio = false;
-                break;
-            case R.id.checkbox_vibration:
-                if (checked)
-                    vibration = true;
-                else
-                    vibration = false;
-                break;
-        }*/
     }
 
 }

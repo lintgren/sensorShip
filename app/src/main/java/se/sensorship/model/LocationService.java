@@ -1,4 +1,4 @@
-package se.sensorship;
+package se.sensorship.model;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -18,10 +18,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import se.sensorship.R;
 
 public class LocationService extends Service implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -53,16 +56,45 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     @Override
     public void onCreate() {
+        LatLng[] longPath = new LatLng[]{new LatLng(55.714875, 13.211989),
+                new LatLng(55.714875, 13.211989),
+                new LatLng(55.714732, 13.211869),
+                new LatLng(55.714542, 13.211739),
+                new LatLng(55.714388, 13.2117),
+                new LatLng(55.714225, 13.211577),
+                new LatLng(55.714022, 13.211438),
+                new LatLng(55.713896, 13.21149),
+                new LatLng(55.713857, 13.211782),
+                new LatLng(55.713834, 13.21197),
+                new LatLng(55.713702, 13.211783),
+                new LatLng(55.713634, 13.211431),
+                new LatLng(55.713631, 13.211127),
+                new LatLng(55.7138, 13.21103),
+                new LatLng(55.71403, 13.210915),
+                new LatLng(55.714119, 13.210897),
+                new LatLng(55.714276, 13.210761),
+                new LatLng(55.714453, 13.210563),
+                new LatLng(55.714658, 13.210407),
+                new LatLng(55.714832, 13.210585),
+                new LatLng(55.7149, 13.210711),
+                new LatLng(55.715019, 13.210901),
+                new LatLng(55.715084, 13.211128),
+                new LatLng(55.715027, 13.211471),
+                new LatLng(55.714971, 13.211732),
+                new LatLng(55.714971, 13.211732)};
+        Direction[] longDirections = new Direction[]{new Direction(55.71391, 13.21140,Direction.LEFT),
+                new Direction(55.71377, 13.21205, Direction.RIGHT),
+                new Direction(55.71371, 13.21205, Direction.RIGHT),
+                new Direction(55.713600, 13.2111, Direction.SLIGHT_RIGHT),
+                new Direction(55.71464, 13.21040, Direction.SLIGHT_RIGHT),
+                new Direction(55.715084, 13.21107, Direction.RIGHT),
+                new Direction(55.714971, 13.211732, Direction.GOAL)};
         googleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
         googleApiClient.connect();
-        route = new Route(Route.directions, Route.static_path);
+        route = new Route(longDirections, longPath);
         timeToTurnThread = new TimeToTurnThread(this, route);
         startTime = new Date().getTime();
-    }
-
-    public Route getRoute() {
-        return route;
     }
 
     @Override

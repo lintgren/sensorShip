@@ -1,4 +1,4 @@
-package se.sensorship;
+package se.sensorship.model;
 
 import android.location.Location;
 import android.util.Log;

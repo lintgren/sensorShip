@@ -1,4 +1,4 @@
-package se.sensorship;
+package se.sensorship.view;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
@@ -8,7 +8,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
+
+import se.sensorship.R;
 
 /**
  * Created by Andy on 15-04-14.
@@ -26,12 +27,9 @@ public class FragmentHolder extends FragmentActivity {
 
         // ViewPager and its adapters use support library
         // fragments, so use getSupportFragmentManager.
-        mDemoCollectionPagerAdapter =
-                new DemoCollectionPagerAdapter(
-                        getSupportFragmentManager());
+        mDemoCollectionPagerAdapter = new DemoCollectionPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setOnPageChangeListener(
-                new ViewPager.SimpleOnPageChangeListener() {
+        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
                     @Override
                     public void onPageSelected(int position) {
                         // When swiping between pages, select the
@@ -64,14 +62,8 @@ public class FragmentHolder extends FragmentActivity {
 
 
         // Add 2 tabs, specifying the tab's text and TabListener
-        actionBar.addTab(
-                actionBar.newTab()
-                        .setText("History")
-                        .setTabListener(tabListener));
-        actionBar.addTab(
-                actionBar.newTab()
-                        .setText("Start")
-                        .setTabListener(tabListener));
+        actionBar.addTab(actionBar.newTab().setText("History").setTabListener(tabListener));
+        actionBar.addTab(actionBar.newTab().setText("Start").setTabListener(tabListener));
         mViewPager.setCurrentItem(1);
     }
 
@@ -84,18 +76,18 @@ public class FragmentHolder extends FragmentActivity {
 
         @Override
         public Fragment getItem(int i) {
-            if (i == 0) {
-                Fragment fragment = new MapFragment();
+            if (i == 0){
+                Fragment fragment = new HistoryFragment();
                 Bundle args = new Bundle();
                 // Our object is just an integer :-P
-                args.putInt(MapFragment.ARG_OBJECT, i + 1);
+                args.putInt(HistoryFragment.ARG_OBJECT, i + 1);
                 fragment.setArguments(args);
                 return fragment;
-            } else {
+            }else{
                 Fragment fragment = new StartFragment();
                 Bundle args = new Bundle();
                 // Our object is just an integer :-P
-                args.putInt(MapFragment.ARG_OBJECT, i + 1);
+                args.putInt(HistoryFragment.ARG_OBJECT, i + 1);
                 fragment.setArguments(args);
                 return fragment;
             }
@@ -112,14 +104,4 @@ public class FragmentHolder extends FragmentActivity {
         }
     }
 
-    public void onCheckboxClicked(View view) {
-        FragmentManager fm = getSupportFragmentManager();
-        StartFragment fragment = (StartFragment) fm.findFragmentById(0);
-        fragment.onCheckboxClicked(view);
-    }
-
-    //   @Override
-    protected void OnFragmentInteractionListener() {
-
-    }
 }

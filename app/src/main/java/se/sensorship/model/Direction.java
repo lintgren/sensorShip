@@ -1,4 +1,4 @@
-package se.sensorship;
+package se.sensorship.model;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -17,6 +17,11 @@ public class Direction {
     private String direction;
     private boolean longNotified = false;
 
+    public Direction(LatLng location, String direction){
+        this.location = location;
+        this.direction = direction;
+    }
+
     public boolean isShortnotified() {
         return shortnotified;
     }
@@ -34,11 +39,6 @@ public class Direction {
     }
 
     private boolean shortnotified = false;
-
-    public Direction(LatLng location, String direction){
-        this.location = location;
-        this.direction = direction;
-    }
     public Direction(double lat, double lon, String direction){
        this(new LatLng(lat,lon),direction);
     }

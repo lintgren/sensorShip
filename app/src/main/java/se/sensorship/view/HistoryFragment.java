@@ -1,4 +1,4 @@
-package se.sensorship;
+package se.sensorship.view;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,8 +10,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import se.sensorship.R;
 
-public class MapFragment extends android.support.v4.app.Fragment implements OnItemSelectedListener {
+
+public class HistoryFragment extends android.support.v4.app.Fragment implements OnItemSelectedListener {
     public static final String ARG_OBJECT = "object";
 
     Spinner spinner;
@@ -57,7 +59,7 @@ public class MapFragment extends android.support.v4.app.Fragment implements OnIt
     }
 
 
-    public MapFragment() {
+    public HistoryFragment() {
         // Required empty public constructor
     }
 }
