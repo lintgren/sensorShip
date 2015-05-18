@@ -19,6 +19,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.Date;
 import java.util.Locale;
 
 public class LocationService extends Service implements GoogleApiClient.ConnectionCallbacks,
@@ -38,6 +39,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private boolean threadIsStarted = false;
     private boolean useAudio, useVibration;
     private boolean GPSWorking = true;
+    private long startTime;
 
 
     public LocationService() {
@@ -55,6 +57,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         googleApiClient.connect();
         route = new Route(Route.directions, Route.static_path);
         timeToTurnThread = new TimeToTurnThread(this, route);
+        startTime = new Date().getTime();
     }
 
     public Route getRoute() {
@@ -181,7 +184,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     }
 
     private void longVibrate() {
-        detailedVibrate(1, 500);
+        detailedVibrate(1, 1000);
     }
 
     private void detailedVibrate(int numberOfVibrations, int vibrateLength) {
@@ -247,7 +250,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     public void notifyUserFinishedRound() {
         longVibrate();
-        double elapsedDistance = Math.round(route.getElapsedDistance()*100)/100;
-        speak("Well done! You ran " + elapsedDistance + " kilometers in ");
+        long elapsedTime = Math.round((new Date().getTime() - startTime) * 1000);
+        double elapsedDistance = Math.round(route.getElapsedDistance()/10)/100;
+        speak("Well done! You ran " + elapsedDistance + " meters in " + elapsedTime + "seconds");
     }
 }
