@@ -1,4 +1,4 @@
-package se.sensorship;
+package se.sensorship.model;
 
 import android.location.Location;
 import android.util.Log;
@@ -17,7 +17,7 @@ import java.util.List;
 public class Route implements Serializable {
     //TODO remove the fist two attributes, only used for the map
     static List<LatLng> pointsToTurn = new ArrayList<LatLng>();
-    static LatLng[] static_path;
+    public static LatLng[] static_path;
     private final String TAG = "Route";
     private LatLng[] path;
     static Direction[] directions;
@@ -56,13 +56,7 @@ public class Route implements Serializable {
 
     }
 
-    public static List<LatLng> getLocationOnTurns() {
-        return pointsToTurn;
-    }
-
     public void updateLocation(Location location) {
-        if(startTime==0)
-            startTime=location.getTime();
         currentLocation = location;
         prevLocations.add(location);
         updateClosestPointOnPathIndex();
@@ -143,25 +137,26 @@ public class Route implements Serializable {
         return ret;
     }
 
-    public float getElapsedDistanceOnPath() {
-        int currentIndexOnPath = getClosestPointOnPathIndex();
-        float distance = 0;
-        for (int i = 0; i < currentIndexOnPath; i++){
-            distance += convertLatLngToLocation(path[i]).distanceTo(convertLatLngToLocation
-                    (path[i + 1]));
-        }
-        return distance;
-    }
-    public float getElapsedTime(){
-        float currentTime = currentLocation.getTime();
-        return currentTime - startTime;
-    }
-
     public double getElapsedDistance() {
         double distance = 0;
         for (int i = 0; i < prevLocations.size() - 1; i++){
             distance += prevLocations.get(i).distanceTo(prevLocations.get(i + 1));
         }
         return distance;
+    }
+
+    public Direction prevDirection() {
+        int currentIndexOnPath = getClosestPointOnPathIndex();
+        int directionPointIndex = 0;
+        for (; directionPointIndex < turnDirectionOnPathIndex.size(); directionPointIndex++){
+            if (turnDirectionOnPathIndex.get(directionPointIndex) >= currentIndexOnPath){
+                break;
+            }
+        }
+        if(directionPointIndex > 0){
+            return directions[directionPointIndex-1];
+        }else{
+            return null;
+        }
     }
 }

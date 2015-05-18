@@ -1,4 +1,4 @@
-package se.sensorship;
+package se.sensorship.model;
 
 import android.location.Location;
 import android.util.Log;
@@ -7,9 +7,7 @@ import android.util.Log;
  * Created by Wycheproof on 15-04-23.
  */
 public class TimeToTurnThread extends Thread {
-
     private static final String TAG = "Thread";
-
 
     private LocationService locationService;
     private Route route;
@@ -31,6 +29,12 @@ public class TimeToTurnThread extends Thread {
         Direction direction = route.nextDirection();
         while (!direction.getDirection().equals(Direction.GOAL)){
             direction = route.nextDirection();
+            Direction prevDirection = route.prevDirection();
+            if(prevDirection == null) Log.d(TAG, "PrevDir is null");
+            if(prevDirection!= null && !prevDirection.isShortnotified()){
+                Log.d(TAG, "prevDir is a " + prevDirection.getDirection());
+                locationService.notifyUser(prevDirection);
+            }
             Log.d(TAG, "TimeToTurn: " + timeToTurn);
             try{
                 long sleepTime;
@@ -46,12 +50,10 @@ public class TimeToTurnThread extends Thread {
                     sleepTime = Long.MAX_VALUE;
 
                 if (sleepTime > 0){
+                    Log.d(TAG, "sleeping for " + sleepTime);
                     sleep(sleepTime);
                 }
-                locationService.notifyUser();
-
-                Log.d(TAG, "We have waited " + sleepTime/1000 + " sec");
-                //sleep(Long.MAX_VALUE);
+                locationService.notifyUser(direction);
             }catch (InterruptedException e){
             }
         }
@@ -79,7 +81,7 @@ public class TimeToTurnThread extends Thread {
         locationHead = (locationHead + 1) % oldLocations.length;
         calculateSpeed();
         calculateTimeToTurn();
-        if(!route.nextDirection().isLongNotified()) {
+        if(!route.nextDirection().isLongNotified()){
             this.interrupt();
         }
     }
