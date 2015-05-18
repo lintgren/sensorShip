@@ -29,6 +29,12 @@ public class TimeToTurnThread extends Thread {
         Direction direction = route.nextDirection();
         while (!direction.getDirection().equals(Direction.GOAL)){
             direction = route.nextDirection();
+            Direction prevDirection = route.prevDirection();
+            if(prevDirection == null) Log.d(TAG, "PrevDir is null");
+            if(prevDirection!= null && !prevDirection.isShortnotified()){
+                Log.d(TAG, "prevDir is a " + prevDirection.getDirection());
+                locationService.notifyUser(prevDirection);
+            }
             Log.d(TAG, "TimeToTurn: " + timeToTurn);
             try{
                 long sleepTime;
@@ -44,12 +50,10 @@ public class TimeToTurnThread extends Thread {
                     sleepTime = Long.MAX_VALUE;
 
                 if (sleepTime > 0){
+                    Log.d(TAG, "sleeping for " + sleepTime);
                     sleep(sleepTime);
                 }
-                locationService.notifyUser();
-
-                Log.d(TAG, "We have waited " + sleepTime/1000 + " sec");
-                //sleep(Long.MAX_VALUE);
+                locationService.notifyUser(direction);
             }catch (InterruptedException e){
             }
         }
@@ -78,10 +82,8 @@ public class TimeToTurnThread extends Thread {
         calculateSpeed();
         calculateTimeToTurn();
         if(!route.nextDirection().isLongNotified()){
-            Log.d(TAG, "interrupted thread");
             this.interrupt();
         }
-        Log.d(TAG,"updateLocationFinished!");
     }
 
 

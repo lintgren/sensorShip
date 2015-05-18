@@ -57,8 +57,6 @@ public class LocationActivity extends Activity implements ConnectionCallbacks,
     }
 
     private void startLocationService() {
-
-
         locationServiceIntent = new Intent(this, LocationService.class);
         Bundle extras = new Bundle();
         extras.putInt("distance", distance);

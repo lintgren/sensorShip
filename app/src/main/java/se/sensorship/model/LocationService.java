@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
+import android.text.Layout;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -56,39 +57,56 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     @Override
     public void onCreate() {
-        LatLng[] longPath = new LatLng[]{new LatLng(55.714875, 13.211989),
-                new LatLng(55.714875, 13.211989),
-                new LatLng(55.714732, 13.211869),
-                new LatLng(55.714542, 13.211739),
-                new LatLng(55.714388, 13.2117),
-                new LatLng(55.714225, 13.211577),
-                new LatLng(55.714022, 13.211438),
-                new LatLng(55.713896, 13.21149),
-                new LatLng(55.713857, 13.211782),
-                new LatLng(55.713834, 13.21197),
-                new LatLng(55.713702, 13.211783),
-                new LatLng(55.713634, 13.211431),
-                new LatLng(55.713631, 13.211127),
-                new LatLng(55.7138, 13.21103),
-                new LatLng(55.71403, 13.210915),
-                new LatLng(55.714119, 13.210897),
-                new LatLng(55.714276, 13.210761),
-                new LatLng(55.714453, 13.210563),
-                new LatLng(55.714658, 13.210407),
-                new LatLng(55.714832, 13.210585),
-                new LatLng(55.7149, 13.210711),
-                new LatLng(55.715019, 13.210901),
-                new LatLng(55.715084, 13.211128),
-                new LatLng(55.715027, 13.211471),
-                new LatLng(55.714971, 13.211732),
-                new LatLng(55.714971, 13.211732)};
-        Direction[] longDirections = new Direction[]{new Direction(55.71391, 13.21140,Direction.LEFT),
-                new Direction(55.71377, 13.21205, Direction.RIGHT),
-                new Direction(55.71371, 13.21205, Direction.RIGHT),
-                new Direction(55.713600, 13.2111, Direction.SLIGHT_RIGHT),
-                new Direction(55.71464, 13.21040, Direction.SLIGHT_RIGHT),
-                new Direction(55.715084, 13.21107, Direction.RIGHT),
-                new Direction(55.714971, 13.211732, Direction.GOAL)};
+        LatLng[] longPath = new LatLng[]{new LatLng(55.7148675, 13.2119232),
+                new LatLng(55.7147799, 13.2118857), new LatLng(55.7147497, 13.2118642),
+                new LatLng(55.7147043, 13.2118428), new LatLng(55.7146650, 13.2118160),
+                new LatLng(55.7146227, 13.2117999), new LatLng(55.7145955, 13.2117999),
+                new LatLng(55.7145563, 13.2117569), new LatLng(55.7145140, 13.2117194),
+                new LatLng(55.7144777, 13.2117140), new LatLng(55.7144505, 13.2116979),
+                new LatLng(55.7144324, 13.2116765), new LatLng(55.7143961, 13.2116497),
+                new LatLng(55.7143417, 13.2116121), new LatLng(55.7142934, 13.2115853),
+                new LatLng(55.7142511, 13.2115638), new LatLng(55.7142208, 13.2115424),
+                new LatLng(55.7141483, 13.2114995), new LatLng(55.7140909, 13.2114619),
+                new LatLng(55.7140123, 13.2114404), new LatLng(55.7139609, 13.2113975),
+                new LatLng(55.7139247, 13.2113922), new LatLng(55.7138975, 13.2115209),
+                new LatLng(55.7138794, 13.2116175), new LatLng(55.7138673, 13.2116818),
+                new LatLng(55.7138552, 13.2117409), new LatLng(55.7138491, 13.2117945),
+                new LatLng(55.7138401, 13.2118320), new LatLng(55.7138038, 13.2118267),
+                new LatLng(55.7137736, 13.2118106), new LatLng(55.7137464, 13.2117730),
+                new LatLng(55.7137252, 13.2117569), new LatLng(55.7136860, 13.2117301),
+                new LatLng(55.7136739, 13.2116443), new LatLng(55.7136588, 13.2115263),
+                new LatLng(55.7136588, 13.2114619), new LatLng(55.7136527, 13.2114190),
+                new LatLng(55.7136467, 13.2113653), new LatLng(55.7136436, 13.2113063),
+                new LatLng(55.7136316, 13.2112527), new LatLng(55.7136134, 13.2111669),
+                new LatLng(55.7136104, 13.2111293), new LatLng(55.7136104, 13.2110810),
+                new LatLng(55.7136104, 13.2110435), new LatLng(55.7136316, 13.2110220),
+                new LatLng(55.7136618, 13.2110327), new LatLng(55.7137071, 13.2110327),
+                new LatLng(55.7137343, 13.2110327), new LatLng(55.7137736, 13.2110274),
+                new LatLng(55.7138099, 13.2110006), new LatLng(55.7138431, 13.2109845),
+                new LatLng(55.7138703, 13.2109684), new LatLng(55.7139398, 13.2109416),
+                new LatLng(55.7139730, 13.2109040), new LatLng(55.7140033, 13.2108986),
+                new LatLng(55.7140728, 13.2108450), new LatLng(55.7141332, 13.2107967),
+                new LatLng(55.7141815, 13.2107645), new LatLng(55.7142511, 13.2107216),
+                new LatLng(55.7143115, 13.2106841), new LatLng(55.7143598, 13.2106465),
+                new LatLng(55.7143931, 13.2106143), new LatLng(55.7144414, 13.2105660),
+                new LatLng(55.7144898, 13.2105178), new LatLng(55.7145260, 13.2104802),
+                new LatLng(55.7145955, 13.2104212), new LatLng(55.7146379, 13.2103944),
+                new LatLng(55.7146681, 13.2104319), new LatLng(55.7147043, 13.2104856),
+                new LatLng(55.7147466, 13.2105446), new LatLng(55.7147769, 13.2105982),
+                new LatLng(55.7148071, 13.2106358), new LatLng(55.7148584, 13.2106894),
+                new LatLng(55.7148856, 13.2107431), new LatLng(55.7149310, 13.2108235),
+                new LatLng(55.7149733, 13.2108933), new LatLng(55.7150126, 13.2109416),
+                new LatLng(55.7150609, 13.2109952), new LatLng(55.7150790, 13.2110542),
+                new LatLng(55.7150609, 13.2111293), new LatLng(55.7150458, 13.2112312),
+                new LatLng(55.7150307, 13.2113171), new LatLng(55.7149975, 13.2114351),
+                new LatLng(55.7149944, 13.2115102), new LatLng(55.7149854, 13.2115799),
+                new LatLng(55.7149672, 13.2116765), new LatLng(55.7149521, 13.2117516),
+                new LatLng(55.7149461, 13.2118267)};
+        Direction[] longDirections = new Direction[]{new Direction(55.7139247, 13.2113975,
+                Direction.LEFT), new Direction(55.7138371, 13.2118428, Direction.RIGHT),
+                new Direction(55.7136829, 13.2117677, Direction.RIGHT), new Direction(55.713630,
+                13.211080, Direction.SLIGHT_RIGHT), new Direction(55.7146288, 13.2103890,
+                Direction.RIGHT), new Direction(55.7149461, 13.2118267, Direction.GOAL)};
         googleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
         googleApiClient.connect();
@@ -130,8 +148,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     @Override
     public void onConnected(Bundle bundle) {
         LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(1000);
-        locationRequest.setFastestInterval(1000);
+        locationRequest.setInterval(1500);
+        locationRequest.setFastestInterval(1500);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient,
                 locationRequest, this);
@@ -149,6 +167,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.d(TAG, "accuracy: " + location.getAccuracy());
         if (location.getAccuracy() < 15){
             onLocationChangedSynchronized(location);
             GPSWorking = true;
@@ -267,8 +286,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         }
     }
 
-    public void notifyUser() {
-        Direction direction = route.nextDirection();
+    public void notifyUser(Direction direction) {
+        Log.d(TAG, "notifyUser: " + direction.toString());
         if (!direction.isLongNotified()){
             longVibrate();
             speak("turn " + direction.getDirection() + " in " + Direction.LONG_ALERT_TIME + " " +
@@ -284,7 +303,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     public void notifyUserFinishedRound() {
         longVibrate();
         long elapsedTime = Math.round((new Date().getTime() - startTime) / 1000);
-        String distance = new DecimalFormat("##.#").format(route.getElapsedDistance()/1000);
+        String distance = new DecimalFormat("##.#").format(route.getElapsedDistance() / 1000);
         speak("Well done! You ran " + distance + " kilometers in " + elapsedTime + "seconds");
     }
 }

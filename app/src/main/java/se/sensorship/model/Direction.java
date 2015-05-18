@@ -53,4 +53,14 @@ public class Direction {
     public void setLocation(LatLng location) {
         this.location = location;
     }
+
+    @Override
+    public String toString() {
+        return "Direction{" +
+                "location=" + location +
+                ", direction='" + direction + '\'' +
+                ", longNotified=" + longNotified +
+                ", shortnotified=" + shortnotified +
+                '}';
+    }
 }

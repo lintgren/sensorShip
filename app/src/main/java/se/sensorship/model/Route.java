@@ -144,4 +144,19 @@ public class Route implements Serializable {
         }
         return distance;
     }
+
+    public Direction prevDirection() {
+        int currentIndexOnPath = getClosestPointOnPathIndex();
+        int directionPointIndex = 0;
+        for (; directionPointIndex < turnDirectionOnPathIndex.size(); directionPointIndex++){
+            if (turnDirectionOnPathIndex.get(directionPointIndex) >= currentIndexOnPath){
+                break;
+            }
+        }
+        if(directionPointIndex > 0){
+            return directions[directionPointIndex-1];
+        }else{
+            return null;
+        }
+    }
 }
