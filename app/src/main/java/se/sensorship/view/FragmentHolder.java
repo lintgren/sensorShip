@@ -14,6 +14,12 @@ import se.sensorship.R;
 /**
  * Created by Andy on 15-04-14.
  */
+
+/**
+ * Fragmenten, XML och denna klass bygger på googles exempelkod.
+ * https://developer.android.com/training/implementing-navigation/lateral.html
+ */
+
 public class FragmentHolder extends FragmentActivity {
 
 
