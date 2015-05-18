@@ -7,9 +7,7 @@ import android.util.Log;
  * Created by Wycheproof on 15-04-23.
  */
 public class TimeToTurnThread extends Thread {
-
     private static final String TAG = "Thread";
-
 
     private LocationService locationService;
     private Route route;
@@ -79,9 +77,11 @@ public class TimeToTurnThread extends Thread {
         locationHead = (locationHead + 1) % oldLocations.length;
         calculateSpeed();
         calculateTimeToTurn();
-        if(!route.nextDirection().isLongNotified()) {
+        if(!route.nextDirection().isLongNotified()){
+            Log.d(TAG, "interrupted thread");
             this.interrupt();
         }
+        Log.d(TAG,"updateLocationFinished!");
     }
 
 
